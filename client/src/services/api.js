@@ -109,6 +109,7 @@ export const contestService = {
 export const userService = { 
   me: () => api.get('/users/me'), 
   profile: (username) => api.get(`/users/${username}`),
+  // Admin-only endpoint: accepts { userId?, email?, isPro?, durationDays? }
   upgradePro: (data) => api.post('/users/upgrade-pro', data)
 };
 // LLM-backed calls can legitimately take longer than the default 10s timeout

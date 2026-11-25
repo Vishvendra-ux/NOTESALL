@@ -190,8 +190,8 @@ export default function CodingProfileTrackerSection() {
           </div>
 
           <div>
-            <label className="block text-[11px] font-extrabold uppercase tracking-wider text-blue-700 dark:text-blue-400 mb-1">
-              🔵 Codeforces Handle
+            <label className="block text-[11px] font-extrabold uppercase tracking-wider text-rose-700 dark:text-rose-400 mb-1">
+              🔴 Codeforces Handle
             </label>
             <input
               type="text"
@@ -284,8 +284,8 @@ export default function CodingProfileTrackerSection() {
             {/* Codeforces Card */}
             <div className="rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700 p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-extrabold text-blue-600">🔵 Codeforces</span>
-                <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-extrabold">
+                <span className="text-xs font-extrabold text-rose-600">🔴 Codeforces</span>
+                <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[10px] font-extrabold">
                   {myProfile.codeforces?.rank || 'Unrated'}
                 </span>
               </div>
@@ -361,7 +361,7 @@ export default function CodingProfileTrackerSection() {
             {[
               { id: 'overall', label: '🏆 Unified Rank' },
               { id: 'leetcode', label: '🟡 LeetCode' },
-              { id: 'codeforces', label: '🔵 Codeforces' },
+              { id: 'codeforces', label: '🔴 Codeforces' },
               { id: 'codechef', label: '🟤 CodeChef' },
               { id: 'colleges', label: '🏛️ Top Colleges' },
             ].map((tab) => (
@@ -524,7 +524,7 @@ export default function CodingProfileTrackerSection() {
                     <th className="py-3.5 px-4 sm:px-5">Rank</th>
                     <th className="py-3.5 px-4 sm:px-5">Student &amp; Campus</th>
                     <th className="py-3.5 px-4 sm:px-5">🟡 LeetCode (E / M / H)</th>
-                    <th className="py-3.5 px-4 sm:px-5">🔵 Codeforces</th>
+                    <th className="py-3.5 px-4 sm:px-5">🔴 Codeforces</th>
                     <th className="py-3.5 px-4 sm:px-5">🟤 CodeChef</th>
                     <th className="py-3.5 px-4 sm:px-5">Total Solved</th>
                     <th className="py-3.5 px-4 sm:px-5 text-right">NOTESX Score</th>
@@ -649,12 +649,12 @@ export default function CodingProfileTrackerSection() {
                                   href={`https://codeforces.com/profile/${handles.codeforces}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="font-extrabold text-slate-800 dark:text-slate-200 hover:text-blue-600 inline-flex items-center gap-1"
+                                  className="font-extrabold text-slate-800 dark:text-slate-200 hover:text-rose-600 inline-flex items-center gap-1"
                                 >
                                   <span>@{handles.codeforces}</span>
                                   <ExternalLink size={10} />
                                 </a>
-                                <span className="rounded bg-blue-50 text-blue-700 px-1.5 py-0.2 text-[10px] font-extrabold">
+                                <span className="rounded bg-rose-50 text-rose-700 px-1.5 py-0.2 text-[10px] font-extrabold">
                                   {cf.rank || 'Rated'}
                                 </span>
                               </div>

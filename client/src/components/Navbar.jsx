@@ -206,7 +206,7 @@ export default function Navbar() {
           <div className="flex justify-between items-center h-[68px]">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-[#273aab] flex items-center justify-center text-white shadow-lg shadow-indigo-200 dark:shadow-none group-hover:scale-105 transition-transform duration-200">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#c2410c] to-[#d97706] flex items-center justify-center text-white shadow-lg shadow-indigo-200 dark:shadow-none group-hover:scale-105 transition-transform duration-200">
                 <Sparkles size={18} />
               </div>
               <span className="font-extrabold text-[17px] tracking-[-.04em] text-slate-900 dark:text-white">
@@ -240,7 +240,7 @@ export default function Navbar() {
             {/* Logo */}
             <div className="flex items-center">
               <Link to="/" className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-[#273aab] flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#c2410c] to-[#d97706] flex items-center justify-center text-white shadow-lg shadow-indigo-200">
                   <Sparkles size={18} />
                 </div>
                 <span className="font-extrabold text-[17px] tracking-[-.04em] text-slate-900">

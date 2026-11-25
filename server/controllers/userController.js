@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/User');
 
 exports.me = async (req, res, next) => { 
@@ -109,18 +110,47 @@ exports.deleteResume = async (req, res, next) => {
 
 exports.togglePro = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    // Defense-in-depth: never allow non-admins to modify Pro subscriptions directly
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only administrators can update Pro subscriptions.' });
     }
 
-    const setProTo = req.body.isPro !== undefined ? Boolean(req.body.isPro) : !user.isPro;
-    user.isPro = setProTo;
-    user.proExpiresAt = setProTo ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : null;
-    await user.save();
+    const { userId, email, isPro, durationDays } = req.body || {};
 
-    const updatedUser = await User.findById(user._id).select('-password');
-    console.log(`⭐ Pro status updated for ${updatedUser.email}: ${updatedUser.isPro}`);
+    let targetUser = null;
+    if (userId !== undefined && userId !== null && String(userId).trim() !== '') {
+      const cleanId = String(userId).trim();
+      if (!mongoose.isValidObjectId(cleanId)) {
+        return res.status(400).json({ message: 'Invalid target userId format.' });
+      }
+      targetUser = await User.findById(cleanId);
+    } else if (email !== undefined && email !== null && String(email).trim() !== '') {
+      targetUser = await User.findOne({ email: String(email).toLowerCase().trim() });
+    } else {
+      targetUser = await User.findById(req.user._id);
+    }
+
+    if (!targetUser) {
+      return res.status(404).json({ message: 'Target user not found.' });
+    }
+
+    let parsedDays = 365;
+    if (durationDays !== undefined) {
+      const numDays = Number(durationDays);
+      if (!Number.isFinite(numDays) || numDays < 1 || numDays > 3650) {
+        return res.status(400).json({ message: 'durationDays must be a number between 1 and 3650.' });
+      }
+      parsedDays = Math.floor(numDays);
+    }
+
+    const setProTo = isPro !== undefined ? Boolean(isPro) : !targetUser.isPro;
+    targetUser.isPro = setProTo;
+    targetUser.proExpiresAt = setProTo ? new Date(Date.now() + parsedDays * 24 * 60 * 60 * 1000) : null;
+    targetUser.proProvider = setProTo ? 'admin' : '';
+    await targetUser.save();
+
+    const updatedUser = await User.findById(targetUser._id).select('-password');
+    console.log(`⭐ Pro status updated for ${updatedUser.email}: ${updatedUser.isPro} (by admin ${req.user.email})`);
     res.json({
       message: updatedUser.isPro ? 'Successfully upgraded to NOTESX Pro!' : 'Downgraded to free plan.',
       user: updatedUser

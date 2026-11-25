@@ -24,7 +24,14 @@ const allowedOrigins = process.env.CLIENT_URL
 app.set('allowedOrigins', allowedOrigins);
 
 // Middleware
-app.use(express.json());
+// Preserve raw bytes on payment webhook routes for cryptographic HMAC verification
+app.use(express.json({
+  verify: (req, res, buf) => {
+    if (req.originalUrl && req.originalUrl.startsWith('/api/payments/')) {
+      req.rawBody = buf;
+    }
+  }
+}));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
@@ -82,6 +89,7 @@ app.use('/api/contests', require('./routes/contests'));
 app.use('/api/tests', require('./routes/tests'));
 app.use('/api/questions', require('./routes/questions'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/payments', require('./routes/payments'));
 app.use('/api/ai', require('./routes/ai'));
 app.use('/api/ai-assistant', require('./routes/aiAssistant'));
 app.use('/api/comments', require('./routes/comments'));

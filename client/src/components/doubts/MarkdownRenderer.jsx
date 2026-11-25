@@ -290,7 +290,7 @@ function CodeBlock({ code, language }) {
   };
 
   return (
-    <div className="relative my-3 rounded-2xl overflow-hidden border border-slate-800 bg-[#0d1117] text-slate-100 shadow-md">
+    <div className="relative my-3 rounded-2xl overflow-hidden border border-slate-800 bg-[#161311] text-slate-100 shadow-md">
       <div className="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-900/90 text-xs text-slate-400 font-mono">
         <span>{language || 'code'}</span>
         <button

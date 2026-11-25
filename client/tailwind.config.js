@@ -8,37 +8,37 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Backgrounds
+        // Warm Alabaster & Espresso-Obsidian Backgrounds (zero blue cast)
         bg: {
-          light: '#F8FAFC',
-          lightAlt: '#F1F5F9',
-          dark: '#0B1020',
-          darkAlt: '#111827',
+          light: '#FAF8F5',
+          lightAlt: '#F3EFE8',
+          dark: '#110E0C',
+          darkAlt: '#1B1714',
         },
-        // Primary - Deep Indigo / Electric Blue
+        // Primary — Rich Terracotta & Spiced Ember
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6', // Electric Blue
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af', // Deep Indigo
-          900: '#1e3a8a',
-          950: '#172554',
+          50: '#fff5f0',
+          100: '#ffe6d9',
+          200: '#fecab0',
+          300: '#fda47d',
+          400: '#fb7747',
+          500: '#ea580c',
+          600: '#c2410c',
+          700: '#9a3412',
+          800: '#7c2d12',
+          900: '#652510',
+          950: '#361105',
         },
-        // Accents
+        // Accents (zero blue)
         purple: {
-          light: '#c084fc',
-          DEFAULT: '#a855f7',
-          dark: '#7e22ce',
+          light: '#f7a8cc',
+          DEFAULT: '#be185d',
+          dark: '#831843',
         },
         cyan: {
-          light: '#22d3ee',
-          DEFAULT: '#06b6d4',
-          dark: '#0e7490',
+          light: '#fde047',
+          DEFAULT: '#eab308',
+          dark: '#a16207',
         },
         emerald: {
           light: '#34d399',
@@ -47,17 +47,17 @@ export default {
         },
         orange: {
           light: '#fb923c',
-          DEFAULT: '#f97316',
-          dark: '#c2410c',
+          DEFAULT: '#ea580c',
+          dark: '#9a3412',
         }
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        'premium': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-        'premium-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-        'glow': '0 0 15px rgba(59, 130, 246, 0.5)',
+        'premium': '0 4px 6px -1px rgba(25, 22, 19, 0.05), 0 2px 4px -1px rgba(25, 22, 19, 0.03)',
+        'premium-hover': '0 10px 15px -3px rgba(25, 22, 19, 0.1), 0 4px 6px -2px rgba(25, 22, 19, 0.05)',
+        'glow': '0 0 18px rgba(194, 65, 12, 0.45)',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out forwards',

@@ -92,6 +92,16 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  proProvider: {
+    type: String,
+    enum: ['', 'admin', 'razorpay', 'stripe'],
+    default: '',
+  },
+  lastPaymentId: {
+    type: String,
+    default: '',
+    trim: true,
+  },
   isOnboarded: {
     type: Boolean,
     default: false,

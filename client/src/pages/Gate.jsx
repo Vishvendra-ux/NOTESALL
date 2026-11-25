@@ -181,7 +181,7 @@ export default function Gate() {
           </div>
         </section>
       )}
-      <section className="relative isolate overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#f5f7ff] via-[#f3f4ff] to-[#eeeaff] p-6 shadow-sm ring-1 ring-indigo-100 sm:p-9 lg:p-10 dark:from-slate-900 dark:via-indigo-950/50 dark:to-violet-950/40 dark:ring-slate-700">
+      <section className="relative isolate overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#fff8f3] via-[#fef6ec] to-[#f2fbf6] p-6 shadow-sm ring-1 ring-indigo-100 sm:p-9 lg:p-10 dark:from-slate-900 dark:via-indigo-950/50 dark:to-emerald-950/30 dark:ring-slate-700">
         <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-24 -z-10 h-72 w-72 rounded-full bg-indigo-400/20 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-0 right-[22%] -z-10 h-40 w-40 rounded-full bg-fuchsia-300/20 blur-3xl" />
         <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -228,7 +228,7 @@ export default function Gate() {
               const subjectPercent = Math.round((topicProgress / subject.topics.length) * 100);
               const subjectCompleted = subject.topics.filter((topic) => progressByTopic.get(topic.id)?.status === 'completed').length;
               const subjectActive = subject.topics.some((topic) => progressByTopic.has(topic.id));
-              return <article key={subject.id} className={`group relative overflow-hidden rounded-[1.25rem] border bg-white p-5 shadow-[0_2px_10px_rgba(15,23,42,0.04)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(51,65,125,0.12)] dark:bg-slate-900 ${isOpen ? 'border-indigo-200 ring-2 ring-indigo-100 dark:border-indigo-400/40 dark:ring-indigo-900/50' : 'border-slate-200/80 dark:border-slate-700'}`}>
+              return <article key={subject.id} className={`group relative overflow-hidden rounded-[1.25rem] border bg-white p-5 shadow-[0_2px_10px_rgba(25,21,18,0.04)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(154,52,18,0.12)] dark:bg-slate-900 ${isOpen ? 'border-indigo-200 ring-2 ring-indigo-100 dark:border-indigo-400/40 dark:ring-indigo-900/50' : 'border-slate-200/80 dark:border-slate-700'}`}>
                 <div className={`absolute inset-x-0 top-0 h-1 ${subjectPercent === 100 ? 'bg-emerald-400' : 'bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-400'} opacity-80`} />
                 <div className="flex items-start justify-between gap-3"><span className={`grid h-11 w-11 place-items-center rounded-2xl ring-1 ring-black/[0.03] ${colorTokens[subject.color]}`}><Icon size={21} /></span><span className="rounded-full bg-slate-50 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-slate-500 dark:bg-slate-800 dark:text-slate-400">{String(index + 1).padStart(2, '0')}</span></div>
                 <p className="mt-4 text-xs font-bold uppercase tracking-wider text-slate-500">{subject.phase}</p><h3 className="mt-1 min-h-[3rem] text-lg font-extrabold leading-snug text-slate-900 dark:text-white">{subject.name}</h3><p className="mt-1 min-h-6 text-sm text-slate-500 dark:text-slate-400">{subject.note}</p>

@@ -113,8 +113,8 @@ const allServices = [
     copy: 'Browse unit-by-unit study notes organized by University, Branch, Semester, and Subject. Access formula cheat-sheets, lecture summaries, and solved exam papers verified by top academic seniors.',
     to: '/notes',
     badge: 'Core Academic',
-    color: 'from-blue-600 to-indigo-600',
-    iconBg: 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300',
+    color: 'from-emerald-700 to-teal-600',
+    iconBg: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300',
     features: [
       'Unit 1 to 5 structured syllabi',
       'Previous Year Questions (PYQs) & solutions',
@@ -129,8 +129,8 @@ const allServices = [
     copy: 'Get instant conceptual clarity on complex theorems, debug code snippets, generate practice problems, and receive tailored explanations that point directly to corresponding campus notes.',
     to: '/ai-assistant',
     badge: 'AI Powered',
-    color: 'from-violet-600 to-purple-600',
-    iconBg: 'bg-violet-50 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300',
+    color: 'from-indigo-600 to-orange-500',
+    iconBg: 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300',
     features: [
       'Step-by-step math & code walkthroughs',
       'Context-aware answers mapped to syllabus',
@@ -424,34 +424,34 @@ export default function Home() {
       </section>
 
       {/* HERO SECTION (TAAI.LIVE SIGNATURE STYLING & AI STUDENTS) */}
-      <section className="relative isolate overflow-hidden rounded-[2.5rem] border border-violet-900/40 taai-dot-matrix p-6 text-white shadow-2xl sm:p-10 lg:p-14">
+      <section className="relative isolate overflow-hidden rounded-[2.5rem] border border-amber-900/35 taai-dot-matrix p-6 text-white shadow-2xl sm:p-10 lg:p-14">
         {/* Ambient Counter-Rotating Glow Orbs */}
-        <div className="pointer-events-none absolute -right-24 -top-36 h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle,rgba(255,127,183,0.24)_0%,rgba(139,92,246,0.12)_45%,transparent_68%)] animate-hero-orb-1" />
-        <div className="pointer-events-none absolute -bottom-32 -left-28 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(77,139,255,0.22)_0%,rgba(139,92,246,0.12)_45%,transparent_68%)] animate-hero-orb-2" />
+        <div className="pointer-events-none absolute -right-24 -top-36 h-[560px] w-[560px] rounded-full bg-[radial-gradient(circle,rgba(234,88,12,0.24)_0%,rgba(245,158,11,0.12)_45%,transparent_68%)] animate-hero-orb-1" />
+        <div className="pointer-events-none absolute -bottom-32 -left-28 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.22)_0%,rgba(217,119,6,0.10)_45%,transparent_68%)] animate-hero-orb-2" />
 
         {/* Ambient Twinkling Cosmic Sparkles */}
-        <div className="pointer-events-none absolute left-1/4 top-10 text-pink-300 animate-twinkle-1 text-xs select-none">✦</div>
-        <div className="pointer-events-none absolute left-1/2 top-20 text-violet-300 animate-twinkle-2 text-sm select-none">✧</div>
-        <div className="pointer-events-none absolute right-1/3 top-14 text-blue-300 animate-twinkle-3 text-xs select-none">✦</div>
-        <div className="pointer-events-none absolute left-12 bottom-20 text-pink-200 animate-twinkle-2 text-sm select-none">✦</div>
-        <div className="pointer-events-none absolute right-16 bottom-14 text-violet-200 animate-twinkle-1 text-xs select-none">✧</div>
+        <div className="pointer-events-none absolute left-1/4 top-10 text-amber-300 animate-twinkle-1 text-xs select-none">✦</div>
+        <div className="pointer-events-none absolute left-1/2 top-20 text-orange-300 animate-twinkle-2 text-sm select-none">✧</div>
+        <div className="pointer-events-none absolute right-1/3 top-14 text-emerald-300 animate-twinkle-3 text-xs select-none">✦</div>
+        <div className="pointer-events-none absolute left-12 bottom-20 text-amber-200 animate-twinkle-2 text-sm select-none">✦</div>
+        <div className="pointer-events-none absolute right-16 bottom-14 text-emerald-200 animate-twinkle-1 text-xs select-none">✧</div>
 
         <div className="relative grid items-center gap-12 lg:grid-cols-[1.15fr_1fr]">
           <div className="max-w-2xl">
             {/* Stagger 1: Badge with Live Radar Ping */}
-            <div className="hero-in-1 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-950/60 px-4 py-2 text-xs font-bold text-violet-200 shadow-lg backdrop-blur-md">
+            <div className="hero-in-1 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-950/60 px-4 py-2 text-xs font-bold text-amber-100 shadow-lg backdrop-blur-md">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping-radar absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
               </span>
-              <Sparkles size={14} className="text-[#FF7FB7]" />
+              <Sparkles size={14} className="text-[#fbbf24]" />
               <span>India's All-In-One Engineering Learning & Project Hub</span>
             </div>
 
             {/* Stagger 2: Title with Gradient Flow */}
             <h1 className="hero-in-2 mt-6 text-4xl font-black leading-[1.05] tracking-[-0.04em] text-white sm:text-5xl lg:text-[3.9rem]">
               Learn Smarter,
-              <span className="mt-1 block bg-gradient-to-r from-[#FF7FB7] via-[#C4B0FF] to-[#4D8BFF] bg-clip-text text-transparent">
+              <span className="mt-1 block bg-gradient-to-r from-[#fb923c] via-[#fbbf24] to-[#34d399] bg-clip-text text-transparent">
                 Build Real Projects &
               </span>
               <span className="block text-white">Accelerate Your Degree.</span>
@@ -465,15 +465,15 @@ export default function Home() {
             {/* Stagger 4: Verified Checklist */}
             <div className="hero-in-4 mt-6 flex flex-col gap-2.5 text-sm text-slate-200 font-medium">
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 size={16} className="text-[#FF7FB7] shrink-0" />
+                <CheckCircle2 size={16} className="text-[#fb923c] shrink-0" />
                 <span>Units 1 to 5 structured syllabi mapped to your university & semester</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 size={16} className="text-[#8B5CF6] shrink-0" />
+                <CheckCircle2 size={16} className="text-[#fbbf24] shrink-0" />
                 <span>24/7 AI Tutor providing step-by-step math and code explanations</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <CheckCircle2 size={16} className="text-[#4D8BFF] shrink-0" />
+                <CheckCircle2 size={16} className="text-[#34d399] shrink-0" />
                 <span>Inter-College Coding Battles: Solves dynamically push your college to #1</span>
               </div>
             </div>
@@ -482,7 +482,7 @@ export default function Home() {
             <div className="hero-in-5 mt-8 flex flex-wrap items-center gap-3.5">
               <Link
                 to="/notes"
-                className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#FF7FB7] via-[#8B5CF6] to-[#4D8BFF] px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_8px_25px_rgba(139,92,246,0.4)] transition-all hover:shadow-[0_12px_32px_rgba(139,92,246,0.55)] hover:scale-105 active:scale-95"
+                className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#c2410c] via-[#ea580c] to-[#d97706] px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_8px_25px_rgba(194,65,12,0.45)] transition-all hover:shadow-[0_12px_32px_rgba(234,88,12,0.6)] hover:scale-105 active:scale-95"
               >
                 Find Your Semester Notes <ArrowRight size={16} />
               </Link>
@@ -497,7 +497,7 @@ export default function Home() {
                 to="/sprint"
                 className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/15 backdrop-blur"
               >
-                <Rocket size={15} className="text-fuchsia-400" />
+                <Rocket size={15} className="text-emerald-400" />
                 3-Week Sprint
               </Link>
             </div>
@@ -521,14 +521,14 @@ export default function Home() {
             {/* Playful Wobbling Sticker Badge */}
             <div className="hero-sticker animate-wobble-sticker -top-6 -right-3 sm:-top-8 sm:-right-4">
               <div className="flex flex-col items-center justify-center text-center">
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-pink-100">100% FREE</span>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-100">100% FREE</span>
                 <span className="text-xs font-black tracking-wider text-white">VERIFIED</span>
-                <span className="text-[9px] font-bold text-violet-200">NOTES & AI</span>
+                <span className="text-[9px] font-bold text-emerald-200">NOTES & AI</span>
               </div>
             </div>
 
             {/* Main AI Student Photo Container */}
-            <div className="relative overflow-hidden rounded-[2.2rem] border border-white/20 bg-slate-950 shadow-[0_32px_80px_-24px_rgba(20,16,43,0.85)]">
+            <div className="relative overflow-hidden rounded-[2.2rem] border border-white/20 bg-slate-950 shadow-[0_32px_80px_-24px_rgba(18,14,11,0.85)]">
               <img
                 src="/images/notesx-hero-students.jpg"
                 alt="Diverse Indian engineering college students collaborating with laptops, tablets, and notes in modern campus library"
@@ -537,7 +537,7 @@ export default function Home() {
               />
 
               {/* Dark Vignette Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#07051a] via-[#07051a]/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#13100e] via-[#13100e]/30 to-transparent" />
 
               {/* Live Campus Radar Pill (Top Left) */}
               <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/85 px-3.5 py-1.5 backdrop-blur-md shadow-lg sm:left-6 sm:top-6">
@@ -551,9 +551,9 @@ export default function Home() {
 
               {/* Interactive Live AI Query & Doubt Solver Widget */}
               <div className="absolute inset-x-3 bottom-3 sm:inset-x-5 sm:bottom-4 rounded-2xl border border-white/20 bg-slate-950/90 p-3 backdrop-blur-md shadow-2xl transition-all duration-500">
-                <div className="flex items-center justify-between text-[11px] font-bold text-violet-300">
+                <div className="flex items-center justify-between text-[11px] font-bold text-amber-300">
                   <span className="inline-flex items-center gap-1.5">
-                    <BrainCircuit size={13} className="text-[#FF7FB7] animate-pulse" />
+                    <BrainCircuit size={13} className="text-[#fb923c] animate-pulse" />
                     <span>{liveQueries[queryIndex].tag}</span>
                   </span>
                   <span className="rounded-md bg-emerald-500/20 px-2 py-0.5 text-emerald-300 border border-emerald-500/30 font-mono text-[9px] font-bold">
@@ -561,9 +561,9 @@ export default function Home() {
                   </span>
                 </div>
                 <div className="mt-1.5 flex items-center gap-1.5 text-xs font-semibold text-white">
-                  <span className="text-[#FF7FB7] font-mono">Q:</span>
+                  <span className="text-[#fb923c] font-mono">Q:</span>
                   <span className="truncate">"{liveQueries[queryIndex].q}"</span>
-                  <span className="animate-cursor inline-block h-3.5 w-1 bg-[#FF7FB7] shrink-0" />
+                  <span className="animate-cursor inline-block h-3.5 w-1 bg-[#fb923c] shrink-0" />
                 </div>
                 <div className="mt-1 flex items-center gap-1.5 text-[11px] font-medium text-slate-300">
                   <Check size={12} className="text-emerald-400 shrink-0" />
@@ -575,17 +575,17 @@ export default function Home() {
             {/* Floating Bento Card 1: Syllabus Coverage */}
             <div className="glass-bento-navy animate-float-1 animate-border-glow absolute -bottom-8 -left-4 sm:-bottom-10 sm:-left-8 max-w-[250px] sm:max-w-[270px] rounded-2xl p-4 text-white shadow-2xl z-10">
               <div className="flex items-center justify-between text-xs">
-                <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-500/20 px-2.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-violet-200 uppercase">
+                <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-500/20 px-2.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-emerald-200 uppercase">
                   <BookOpen size={11} /> Syllabus Coverage
                 </span>
-                <span className="text-[10px] font-bold text-violet-300">Units 1 - 5</span>
+                <span className="text-[10px] font-bold text-amber-300">Units 1 - 5</span>
               </div>
               <div className="mt-2.5 flex items-baseline justify-between">
                 <p className="text-xl font-black tracking-tight text-white">100% Curated</p>
                 <span className="text-xs font-bold text-emerald-400">Verified PYQs</span>
               </div>
               <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                <div className="animate-bar-grow h-full w-full rounded-full bg-gradient-to-r from-[#FF7FB7] via-[#8B5CF6] to-[#4D8BFF]" />
+                <div className="animate-bar-grow h-full w-full rounded-full bg-gradient-to-r from-[#fb923c] via-[#fbbf24] to-[#10b981]" />
               </div>
               <p className="mt-2 text-[11px] text-slate-300 leading-snug">
                 Structured by semester & branch with senior formula sheets.
@@ -595,7 +595,7 @@ export default function Home() {
             {/* Floating Bento Card 2: BuildTogether Co-Builders */}
             <div className="glass-bento-rose animate-float-2 animate-border-glow absolute -top-8 -right-4 sm:-top-10 sm:-right-6 max-w-[230px] sm:max-w-[250px] rounded-2xl p-4 text-white shadow-2xl z-10">
               <div className="flex items-center justify-between text-xs">
-                <span className="inline-flex items-center gap-1 rounded-full border border-pink-400/30 bg-pink-500/20 px-2.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-pink-200 uppercase">
+                <span className="inline-flex items-center gap-1 rounded-full border border-orange-400/30 bg-orange-500/20 px-2.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-orange-200 uppercase">
                   <Users size={11} /> BuildTogether
                 </span>
                 <span className="relative flex h-2 w-2">
@@ -605,7 +605,7 @@ export default function Home() {
               </div>
               <div className="mt-2">
                 <p className="text-2xl font-black tracking-tight text-white">2,500+</p>
-                <p className="text-[11px] font-semibold text-pink-200">Active Student Co-Builders</p>
+                <p className="text-[11px] font-semibold text-amber-200">Active Student Co-Builders</p>
               </div>
               <div className="mt-2.5 flex items-center gap-2">
                 <div className="flex -space-x-2">
@@ -625,22 +625,22 @@ export default function Home() {
             href="#services"
             className="group flex flex-col items-center gap-2 text-[11px] font-semibold text-slate-400 hover:text-white transition-colors"
           >
-            <span className="tracking-wider uppercase text-[10px] text-slate-400 group-hover:text-violet-300 transition-colors">Scroll to explore services</span>
+            <span className="tracking-wider uppercase text-[10px] text-slate-400 group-hover:text-amber-300 transition-colors">Scroll to explore services</span>
             <div className="flex h-7 w-4 justify-center rounded-full border-2 border-white/30 p-0.5 shadow-inner">
-              <div className="h-1.5 w-1 rounded-full bg-[#FF7FB7] animate-mouse-wheel" />
+              <div className="h-1.5 w-1 rounded-full bg-[#fb923c] animate-mouse-wheel" />
             </div>
           </a>
         </div>
       </section>
 
       {/* METRICS & CREDIBILITY COUNTER */}
-      <section className="relative overflow-hidden rounded-3xl border border-violet-900/40 taai-dot-matrix p-6 sm:p-10 shadow-2xl text-white">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_90%_at_15%_50%,rgba(236,72,153,0.18)_0%,transparent_65%),radial-gradient(ellipse_35%_80%_at_50%_50%,rgba(139,92,246,0.18)_0%,transparent_65%),radial-gradient(ellipse_40%_90%_at_85%_50%,rgba(56,189,248,0.18)_0%,transparent_65%)]" />
+      <section className="relative overflow-hidden rounded-3xl border border-amber-900/35 taai-dot-matrix p-6 sm:p-10 shadow-2xl text-white">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_90%_at_15%_50%,rgba(234,88,12,0.18)_0%,transparent_65%),radial-gradient(ellipse_35%_80%_at_50%_50%,rgba(245,158,11,0.16)_0%,transparent_65%),radial-gradient(ellipse_40%_90%_at_85%_50%,rgba(16,185,129,0.18)_0%,transparent_65%)]" />
 
         <div className="relative grid grid-cols-2 gap-6 lg:grid-cols-4 lg:gap-8">
           <div className="flex flex-col items-center text-center p-3 relative">
-            <div className="mb-4 h-0.5 w-10 rounded-full bg-[#ec4899] shadow-[0_0_12px_2px_rgba(236,72,153,0.7)]" />
-            <p className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight bg-gradient-to-b from-white via-[#ffc0dc] to-[#ec4899] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(236,72,153,0.5)]">
+            <div className="mb-4 h-0.5 w-10 rounded-full bg-[#f97316] shadow-[0_0_12px_2px_rgba(249,115,22,0.7)]" />
+            <p className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight bg-gradient-to-b from-white via-[#fed7aa] to-[#f97316] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(249,115,22,0.5)]">
               50+
             </p>
             <p className="mt-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">
@@ -652,8 +652,8 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col items-center text-center p-3 relative lg:border-l lg:border-white/10">
-            <div className="mb-4 h-0.5 w-10 rounded-full bg-[#8b5cf6] shadow-[0_0_12px_2px_rgba(139,92,246,0.7)]" />
-            <p className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight bg-gradient-to-b from-white via-[#d8b4fe] to-[#8b5cf6] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(139,92,246,0.5)]">
+            <div className="mb-4 h-0.5 w-10 rounded-full bg-[#f59e0b] shadow-[0_0_12px_2px_rgba(245,158,11,0.7)]" />
+            <p className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight bg-gradient-to-b from-white via-[#fde68a] to-[#f59e0b] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(245,158,11,0.5)]">
               10,000+
             </p>
             <p className="mt-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">
@@ -665,8 +665,8 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col items-center text-center p-3 relative border-t border-white/10 pt-6 lg:border-t-0 lg:border-l lg:pt-3">
-            <div className="mb-4 h-0.5 w-10 rounded-full bg-[#38bdf8] shadow-[0_0_12px_2px_rgba(56,189,248,0.7)]" />
-            <p className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight bg-gradient-to-b from-white via-[#bae6fd] to-[#38bdf8] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(56,189,248,0.5)]">
+            <div className="mb-4 h-0.5 w-10 rounded-full bg-[#10b981] shadow-[0_0_12px_2px_rgba(16,185,129,0.7)]" />
+            <p className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight bg-gradient-to-b from-white via-[#a7f3d0] to-[#10b981] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(16,185,129,0.5)]">
               15,000+
             </p>
             <p className="mt-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">
@@ -678,8 +678,8 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col items-center text-center p-3 relative border-t border-white/10 pt-6 lg:border-t-0 lg:border-l lg:pt-3">
-            <div className="mb-4 h-0.5 w-10 rounded-full bg-[#10b981] shadow-[0_0_12px_2px_rgba(16,185,129,0.7)]" />
-            <p className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight bg-gradient-to-b from-white via-[#a7f3d0] to-[#10b981] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(16,185,129,0.5)]">
+            <div className="mb-4 h-0.5 w-10 rounded-full bg-[#e11d48] shadow-[0_0_12px_2px_rgba(225,29,72,0.7)]" />
+            <p className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight bg-gradient-to-b from-white via-[#fecdd3] to-[#fb7185] bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(225,29,72,0.5)]">
               2,500+
             </p>
             <p className="mt-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">
@@ -871,7 +871,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/30 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1 text-xs font-bold backdrop-blur">
-                <Lightbulb size={14} className="text-[#FF7FB7]" /> High-Yield Learning Focus
+                <Lightbulb size={14} className="text-[#fbbf24]" /> High-Yield Learning Focus
               </span>
               <h4 className="mt-3 text-xl font-bold">No noise. Just pure exam and project clarity.</h4>
               <p className="mt-1 text-xs text-slate-300">
@@ -951,7 +951,7 @@ export default function Home() {
           {/* 4 Interactive Step Cards with Animated Flow Beam */}
           <div className="relative space-y-4 lg:col-span-7 pl-4 sm:pl-6">
             <div className="pointer-events-none absolute left-0 top-6 bottom-6 w-1 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-              <div className="h-28 w-full rounded-full bg-gradient-to-b from-[#FF7FB7] via-[#8B5CF6] to-[#4D8BFF] animate-vertical-beam" />
+              <div className="h-28 w-full rounded-full bg-gradient-to-b from-[#fb923c] via-[#fbbf24] to-[#10b981] animate-vertical-beam" />
             </div>
 
             {onboardingSteps.map((step) => {
@@ -1053,7 +1053,7 @@ export default function Home() {
               {/* Student Profile Info */}
               <div className="mt-6 flex items-center gap-3.5 border-t border-slate-100 pt-4 dark:border-slate-800">
                 <div className="relative p-0.5 rounded-full overflow-hidden shrink-0">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-[#FF7FB7] via-[#8B5CF6] to-[#4D8BFF] animate-spin-slow rounded-full" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#fb923c] via-[#fbbf24] to-[#10b981] animate-spin-slow rounded-full" />
                   <img
                     src={t.avatar}
                     alt={`Portrait of ${t.name}, student at ${t.college}`}
@@ -1130,7 +1130,7 @@ export default function Home() {
         </div>
 
         {/* Marquee Wrapper with Smooth Left & Right Edge Fade Masks */}
-        <div className="relative mt-8 overflow-hidden py-3 before:pointer-events-none before:absolute before:left-0 before:top-0 before:bottom-0 before:w-24 sm:before:w-36 before:z-10 before:bg-gradient-to-r before:from-[#F8FAFC] dark:before:from-[#0B1020] before:to-transparent after:pointer-events-none after:absolute after:right-0 after:top-0 after:bottom-0 after:w-24 sm:after:w-36 after:z-10 after:bg-gradient-to-l after:from-[#F8FAFC] dark:after:from-[#0B1020] after:to-transparent">
+        <div className="relative mt-8 overflow-hidden py-3 before:pointer-events-none before:absolute before:left-0 before:top-0 before:bottom-0 before:w-24 sm:before:w-36 before:z-10 before:bg-gradient-to-r before:from-[#FAF8F5] dark:before:from-[#110E0C] before:to-transparent after:pointer-events-none before:right-auto after:absolute after:right-0 after:top-0 after:bottom-0 after:w-24 sm:after:w-36 after:z-10 after:bg-gradient-to-l after:from-[#FAF8F5] dark:after:from-[#110E0C] after:to-transparent">
           {/* Row 1: Scrolling Left */}
           <div className="animate-marquee flex gap-3">
             {[...collegeRow1, ...collegeRow1].map((col, idx) => (
@@ -1154,11 +1154,11 @@ export default function Home() {
               <Link
                 key={`r2-${col.name}-${idx}`}
                 to="/colleges"
-                className="group sheen-btn flex items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white px-4 py-2.5 text-xs font-bold text-slate-800 shadow-sm transition hover:border-purple-400 hover:scale-105 active:scale-95 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+                className="group sheen-btn flex items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white px-4 py-2.5 text-xs font-bold text-slate-800 shadow-sm transition hover:border-emerald-400 hover:scale-105 active:scale-95 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
               >
                 <span className="text-base">{col.icon}</span>
                 <span>{col.name}</span>
-                <span className="rounded-md bg-purple-50 px-2 py-0.5 text-[10px] font-extrabold text-purple-600 dark:bg-purple-950/80 dark:text-purple-400">
+                <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-extrabold text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-400">
                   {col.badge}
                 </span>
               </Link>
@@ -1168,18 +1168,18 @@ export default function Home() {
       </section>
 
       {/* BOTTOM CLOSING CTA */}
-      <section className="relative overflow-hidden rounded-[2.5rem] taai-dot-matrix border border-violet-900/40 px-6 py-12 text-white shadow-2xl sm:px-12 sm:py-16 lg:px-16">
-        <div className="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(255,127,183,0.25)_0%,rgba(139,92,246,0.12)_45%,transparent_68%)] animate-hero-orb-1" />
-        <div className="pointer-events-none absolute -bottom-24 left-1/4 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(77,139,255,0.22)_0%,rgba(139,92,246,0.12)_45%,transparent_68%)] animate-hero-orb-2" />
+      <section className="relative overflow-hidden rounded-[2.5rem] taai-dot-matrix border border-amber-900/35 px-6 py-12 text-white shadow-2xl sm:px-12 sm:py-16 lg:px-16">
+        <div className="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(234,88,12,0.25)_0%,rgba(245,158,11,0.12)_45%,transparent_68%)] animate-hero-orb-1" />
+        <div className="pointer-events-none absolute -bottom-24 left-1/4 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.22)_0%,rgba(217,119,6,0.10)_45%,transparent_68%)] animate-hero-orb-2" />
 
         <div className="relative flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-950/60 px-3.5 py-1.5 text-xs font-bold text-violet-200 backdrop-blur">
-              <Sparkles size={14} className="text-[#FF7FB7]" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-950/60 px-3.5 py-1.5 text-xs font-bold text-amber-100 backdrop-blur">
+              <Sparkles size={14} className="text-[#fbbf24]" />
               100% Free Forever for Engineering Students
             </div>
             <h2 className="mt-5 text-3xl font-black tracking-[-0.04em] text-white sm:text-4xl lg:text-5xl">
-              Ready to Upgrade Your <span className="bg-gradient-to-r from-[#FF7FB7] via-[#C4B0FF] to-[#4D8BFF] bg-clip-text text-transparent animate-gradient-flow">College Journey?</span>
+              Ready to Upgrade Your <span className="bg-gradient-to-r from-[#fb923c] via-[#fbbf24] to-[#34d399] bg-clip-text text-transparent animate-gradient-flow">College Journey?</span>
             </h2>
             <p className="mt-4 text-base leading-relaxed text-slate-300 sm:text-lg">
               Unlock verified unit notes, 24/7 AI explanations, coding battles, GATE tests, and team project workspaces today.
@@ -1189,7 +1189,7 @@ export default function Home() {
           <div className="flex flex-col gap-3.5 sm:flex-row">
             <Link
               to="/register"
-              className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#FF7FB7] via-[#8B5CF6] to-[#4D8BFF] px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_8px_25px_rgba(139,92,246,0.4)] transition-all hover:shadow-[0_12px_32px_rgba(139,92,246,0.55)] hover:scale-105 active:scale-95"
+              className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#c2410c] via-[#ea580c] to-[#d97706] px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_8px_25px_rgba(194,65,12,0.45)] transition-all hover:shadow-[0_12px_32px_rgba(234,88,12,0.6)] hover:scale-105 active:scale-95"
             >
               Get Started Free <ArrowRight size={16} />
             </Link>
@@ -1216,7 +1216,7 @@ export default function Home() {
           className="fixed bottom-28 left-4 sm:bottom-28 sm:left-6 lg:bottom-28 lg:left-8 z-50 max-w-[calc(100vw-2rem)] sm:max-w-sm rounded-2xl border border-white/20 bg-slate-950/95 p-3.5 text-white shadow-2xl backdrop-blur-xl animate-toast-enter transition-all duration-300"
         >
           <div className="flex items-start gap-3">
-            <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-600 text-sm shadow-md">
+            <div className="relative grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-tr from-[#c2410c] via-[#ea580c] to-[#f59e0b] text-sm shadow-md">
               <span>{liveActivities[activityIndex].icon}</span>
               <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -1224,12 +1224,12 @@ export default function Home() {
               </span>
             </div>
             <div className="flex-1 pr-1">
-              <div className="flex items-center justify-between text-[10px] font-bold text-violet-300">
+              <div className="flex items-center justify-between text-[10px] font-bold text-amber-300">
                 <span className="truncate">{liveActivities[activityIndex].college}</span>
                 <span className="text-slate-400 font-mono text-[9px]">{liveActivities[activityIndex].time}</span>
               </div>
               <p className="mt-0.5 text-xs font-semibold text-white leading-tight">
-                <span className="text-[#FF7FB7]">{liveActivities[activityIndex].student}</span>{' '}
+                <span className="text-[#fb923c]">{liveActivities[activityIndex].student}</span>{' '}
                 <span className="text-slate-300">{liveActivities[activityIndex].action}</span>
               </p>
             </div>

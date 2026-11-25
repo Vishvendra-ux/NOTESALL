@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const controller = require('../controllers/userController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, authorize } = require('../middleware/authMiddleware');
 const { uploadLimiter } = require('../middleware/rateLimiter');
 
 const { getStorage } = require('../middleware/uploadMiddleware');
@@ -35,7 +35,8 @@ router.put('/profile', protect, controller.updateProfile);
 router.put('/me', protect, controller.updateProfile);
 router.post('/resume', protect, uploadLimiter, upload.single('resume'), controller.uploadResume);
 router.delete('/resume', protect, controller.deleteResume);
-router.post('/upgrade-pro', protect, controller.togglePro);
+// Pro status changes are restricted to admins (automated upgrades happen via verified payment webhooks)
+router.post('/upgrade-pro', protect, authorize('admin'), controller.togglePro);
 router.get('/:username', controller.profile);
 
 module.exports = router;
