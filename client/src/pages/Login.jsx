@@ -1,7 +1,10 @@
 import { useState, useContext, useEffect } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Sparkles, Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff, Loader2, GraduationCap, ShieldCheck, UserCheck } from 'lucide-react';
+
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -94,19 +97,31 @@ export default function Login() {
     setError('');
   };
 
-  const handleGoogleSignIn = async (customEmail = null, customName = null) => {
+  const handleGoogleCredentialSuccess = async (credentialResponse) => {
     setError('');
     setIsSubmitting(true);
     try {
-      const payload = customEmail ? {
+      if (!credentialResponse?.credential) {
+        throw new Error('No credential token received from Google.');
+      }
+      const res = await loginWithGoogle({ credential: credentialResponse.credential });
+      navigateAfterAuth(res);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDevCustomGoogleSignIn = async (customEmail, customName) => {
+    if (!import.meta.env.DEV || !customEmail) return;
+    setError('');
+    setIsSubmitting(true);
+    try {
+      const res = await loginWithGoogle({
         name: customName || 'Google Student',
         email: customEmail,
-      } : {
-        name: 'Google Student',
-        email: 'student.google@gmail.com',
-      };
-
-      const res = await loginWithGoogle(payload);
+      });
       setShowCustomGoogleModal(false);
       navigateAfterAuth(res);
     } catch (err) {
@@ -143,29 +158,32 @@ export default function Login() {
 
         {/* Google Sign In for Students (Primary Student Action) */}
         <div className="mb-5 space-y-2">
-          <button
-            type="button"
-            onClick={() => handleGoogleSignIn()}
-            disabled={isSubmitting}
-            className="w-full h-11 flex items-center justify-center gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 text-sm font-semibold transition shadow-xs cursor-pointer disabled:opacity-60"
-          >
-            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            <span>Continue with Google (Student)</span>
-          </button>
+          {googleClientId ? (
+            <div className={`flex justify-center ${isSubmitting ? 'pointer-events-none opacity-60' : ''}`}>
+              <GoogleLogin
+                onSuccess={handleGoogleCredentialSuccess}
+                onError={() => setError('Google Sign-In failed or was cancelled. Please try again.')}
+                theme="outline"
+                size="large"
+                shape="rectangular"
+                text="continue_with"
+                width="360"
+              />
+            </div>
+          ) : (
+            <div className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/80 dark:bg-amber-950/30 px-3.5 py-2.5 text-center text-xs font-medium text-amber-800 dark:text-amber-300">
+              Google Sign-In is unavailable until <code className="font-mono font-semibold">VITE_GOOGLE_CLIENT_ID</code> is configured.
+            </div>
+          )}
 
-          {/* Test Any Google Account Option in Dev Mode */}
+          {/* Test Any Google Account Option in Dev Mode (requires ENABLE_DEMO_USER=true on server) */}
           {import.meta.env.DEV && (
             <button
               type="button"
               onClick={() => setShowCustomGoogleModal(true)}
               className="w-full text-center text-[11px] text-indigo-600 dark:text-indigo-400 font-medium hover:underline py-0.5"
             >
-              Test with Custom Student Google Account &rarr;
+              Test with Custom Student Google Account (Dev) &rarr;
             </button>
           )}
         </div>
@@ -347,7 +365,7 @@ export default function Login() {
                 type="button"
                 onClick={() => {
                   if (customGoogleEmail.trim()) {
-                    handleGoogleSignIn(customGoogleEmail.trim(), customGoogleName.trim());
+                    handleDevCustomGoogleSignIn(customGoogleEmail.trim(), customGoogleName.trim());
                   }
                 }}
                 disabled={!customGoogleEmail.trim() || isSubmitting}

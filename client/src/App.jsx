@@ -27,6 +27,7 @@ const ProjectWorkspace = lazy(() => import('./pages/ProjectWorkspace'));
 const Games = lazy(() => import('./pages/Games'));
 const GateQuestionAdmin = lazy(() => import('./pages/GateQuestionAdmin'));
 const StudentOnboarding = lazy(() => import('./pages/StudentOnboarding'));
+const Privacy = lazy(() => import('./pages/Privacy'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="/sprint" element={<Sprint />} />
             <Route path="/build-together" element={<BuildTogether />} />
             <Route path="/buildtogether" element={<BuildTogether />} />

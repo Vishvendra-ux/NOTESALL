@@ -39,7 +39,7 @@ const formatUserResponse = (user, token) => {
 };
 
 const { OAuth2Client } = require('google-auth-library');
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const googleClient = new OAuth2Client();
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -135,30 +135,37 @@ const googleLogin = async (req, res) => {
     let verifiedPicture = picture;
 
     const rawToken = credential || token || idToken;
+    const configuredClientId = (process.env.GOOGLE_CLIENT_ID || '').trim();
 
     if (rawToken) {
-      // 1. Cryptographically verify token with Google
+      if (!configuredClientId) {
+        return res.status(503).json({
+          message: 'Google Sign-In is not configured on the server (missing GOOGLE_CLIENT_ID).'
+        });
+      }
+
+      // 1. Cryptographically verify ID token signature, expiry, issuer, and audience with Google
       try {
         const ticket = await googleClient.verifyIdToken({
           idToken: rawToken,
-          audience: process.env.GOOGLE_CLIENT_ID || undefined
+          audience: configuredClientId,
         });
-        const payload = ticket.getPayload();
-        verifiedEmail = payload.email ? payload.email.toLowerCase().trim() : null;
-        verifiedName = payload.name || verifiedName;
-        verifiedPicture = payload.picture || verifiedPicture;
+        const payload = ticket ? ticket.getPayload() : null;
+        if (payload && payload.email && payload.email_verified !== false) {
+          verifiedEmail = payload.email.toLowerCase().trim();
+          verifiedName = payload.name || verifiedName;
+          verifiedPicture = payload.picture || verifiedPicture;
+        }
       } catch (tokenErr) {
-        // Fallback check against Google tokeninfo endpoint
-        try {
-          const resp = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(rawToken)}`);
-          if (resp.ok) {
-            const data = await resp.json();
-            if (process.env.GOOGLE_CLIENT_ID && data.aud !== process.env.GOOGLE_CLIENT_ID) throw new Error('aud mismatch');
-            verifiedEmail = data.email ? data.email.toLowerCase().trim() : null;
-            verifiedName = data.name || verifiedName;
-            verifiedPicture = data.picture || verifiedPicture;
-          }
-        } catch (_) {}
+        return res.status(401).json({
+          message: 'Invalid or expired Google credential token.'
+        });
+      }
+
+      if (!verifiedEmail) {
+        return res.status(401).json({
+          message: 'Google account email could not be verified.'
+        });
       }
     }
 
@@ -204,6 +211,18 @@ const googleLogin = async (req, res) => {
       });
       console.log(`✅ New student registered via Google Sign-in: ${user.email}`);
     } else {
+      let updated = false;
+      if (verifiedPicture && !user.profilePhoto) {
+        user.profilePhoto = verifiedPicture;
+        updated = true;
+      }
+      if (!user.isVerified) {
+        user.isVerified = true;
+        updated = true;
+      }
+      if (updated) {
+        await user.save();
+      }
       console.log(`✅ Existing user logged in via Google Sign-in: ${user.email} (${user.role})`);
     }
 
@@ -365,4 +384,4 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = { register, login, googleLogin, completeStudentOnboarding, getMe };
+module.exports = { register, login, googleLogin, completeStudentOnboarding, getMe, googleClient };

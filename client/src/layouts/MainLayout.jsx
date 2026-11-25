@@ -28,8 +28,12 @@ export default function MainLayout() {
 
       {/* Simple Footer */}
       <footer className="border-t border-slate-200 dark:border-slate-800 py-8 mt-auto glass-panel">
-        <div className="max-w-7xl mx-auto px-4 text-center text-sm text-slate-500 dark:text-slate-400">
-          © {new Date().getFullYear()} NOTESX. All rights reserved.
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center text-sm text-slate-500 dark:text-slate-400">
+          <span>© {new Date().getFullYear()} NOTESX. All rights reserved.</span>
+          <span className="hidden sm:inline text-slate-300 dark:text-slate-700">·</span>
+          <Link to="/privacy" className="font-medium hover:text-slate-800 dark:hover:text-slate-200 hover:underline transition">
+            Privacy Policy
+          </Link>
         </div>
       </footer>
       <MobileBottomNav />
