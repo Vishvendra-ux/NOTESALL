@@ -875,22 +875,42 @@ const roadmapsData = [
 
 const moreRoadmapsData = require('./moreRoadmapsData');
 
+const getAllRoadmapsData = () => [
+  ...roadmapsData.map(r => ({ ...r, roadmapType: r.roadmapType || 'Role-based' })),
+  ...moreRoadmapsData
+];
+
+async function seedRoadmapsIfEmpty() {
+  const existingCount = await Roadmap.countDocuments();
+  if (existingCount > 0) {
+    return { seeded: false, count: existingCount };
+  }
+
+  const allRoadmaps = getAllRoadmapsData();
+  for (const r of allRoadmaps) {
+    await Roadmap.findOneAndUpdate(
+      { slug: r.slug },
+      r,
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
+    );
+  }
+  console.log(`✅ Bootstrapped ${allRoadmaps.length} engineering roadmaps.`);
+  return { seeded: true, count: allRoadmaps.length };
+}
+
 async function seed() {
   try {
     const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/notesx';
     await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB for Roadmap Seeding...');
 
-    const allRoadmaps = [
-      ...roadmapsData.map(r => ({ ...r, roadmapType: r.roadmapType || 'Role-based' })),
-      ...moreRoadmapsData
-    ];
+    const allRoadmaps = getAllRoadmapsData();
 
     for (const r of allRoadmaps) {
       await Roadmap.findOneAndUpdate(
         { slug: r.slug },
         r,
-        { upsert: true, new: true, setDefaultsOnInsert: true }
+        { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
       );
       console.log(`✅ Seeded Roadmap: ${r.title} (${r.slug}) [${r.roadmapType || 'Role-based'}]`);
     }
@@ -904,4 +924,8 @@ async function seed() {
   }
 }
 
-seed();
+if (require.main === module) {
+  seed();
+}
+
+module.exports = { seedRoadmapsIfEmpty, getAllRoadmapsData };

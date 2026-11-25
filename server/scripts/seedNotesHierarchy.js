@@ -14,8 +14,8 @@ const Note = require('../models/Note');
 const Review = require('../models/Review');
 const User = require('../models/User');
 
-// SAFETY: destructive reset. Refuses to run in production or without an explicit flag.
-if (process.env.NODE_ENV === 'production' || process.env.ALLOW_DESTRUCTIVE_SEED !== 'true') {
+// SAFETY: destructive reset only runs when executed directly as a CLI script.
+if (require.main === module && (process.env.NODE_ENV === 'production' || process.env.ALLOW_DESTRUCTIVE_SEED !== 'true')) {
   console.error('Refusing to run: this script DELETES existing data. Re-run in development with ALLOW_DESTRUCTIVE_SEED=true');
   process.exit(1);
 }
@@ -93,26 +93,23 @@ const all47BtechBranches = [
   { name: 'Architectural Engineering', shortCode: 'ARCH-ENG', category: 'Civil & Infrastructure', featured: false, color: 'from-sky-700 to-indigo-800', icon: 'Compass', description: 'Building energy modeling, structural systems, HVAC, acoustics, and daylighting.' }
 ];
 
-async function seed() {
-  console.log('Connecting to MongoDB...');
-  await mongoose.connect(MONGO_URI);
-  console.log('Connected to MongoDB successfully!');
-
+async function populateNotesHierarchy({ destructive = false } = {}) {
   // Get or create a sample user for uploading and reviews
   let adminUser = await User.findOne({ email: 'pratapsinghvishvendra6@gmail.com' });
   if (!adminUser) {
-    adminUser = await User.findOne();
+    adminUser = await User.findOne({ role: 'admin' }) || await User.findOne();
   }
 
-  // Clear existing notes hierarchy collections cleanly to re-seed fresh database-driven structures
-  console.log('Refreshing course categories, degrees, branches, subjects, and notes...');
-  await CourseCategory.deleteMany({});
-  await Course.deleteMany({});
-  await Branch.deleteMany({});
-  await AcademicYear.deleteMany({});
-  await Semester.deleteMany({});
-  await Subject.deleteMany({});
-  await Review.deleteMany({});
+  if (destructive) {
+    console.log('Refreshing course categories, degrees, branches, subjects, and notes...');
+    await CourseCategory.deleteMany({});
+    await Course.deleteMany({});
+    await Branch.deleteMany({});
+    await AcademicYear.deleteMany({});
+    await Semester.deleteMany({});
+    await Subject.deleteMany({});
+    await Review.deleteMany({});
+  }
 
   // 1. Seed Categories
   const categoryDocs = await CourseCategory.insertMany(categoriesData);
@@ -321,8 +318,9 @@ async function seed() {
 
   const uploaderId = adminUser ? adminUser._id : new mongoose.Types.ObjectId();
 
-  // Clear existing notes to seed fresh linked notes
-  await Note.deleteMany({});
+  if (destructive) {
+    await Note.deleteMany({});
+  }
 
   const sampleNotes = [
     {
@@ -509,11 +507,33 @@ async function seed() {
   await Review.insertMany(sampleReviews);
   console.log('Seeded sample reviews!');
 
+  return { categories: categoryDocs.length, notes: noteDocs.length };
+}
+
+async function seedNotesHierarchyIfEmpty() {
+  const existingCategories = await CourseCategory.countDocuments();
+  if (existingCategories > 0) {
+    return { seeded: false, count: existingCategories };
+  }
+  const result = await populateNotesHierarchy({ destructive: false });
+  console.log(`✅ Bootstrapped ${result.categories} course categories and ${result.notes} core notes.`);
+  return { seeded: true, ...result };
+}
+
+async function seed() {
+  console.log('Connecting to MongoDB...');
+  await mongoose.connect(MONGO_URI);
+  console.log('Connected to MongoDB successfully!');
+  await populateNotesHierarchy({ destructive: true });
   console.log('✅ Notes hierarchy database seeding completed successfully!');
   await mongoose.disconnect();
 }
 
-seed().catch(err => {
-  console.error('Seeding failed:', err);
-  process.exit(1);
-});
+if (require.main === module) {
+  seed().catch(err => {
+    console.error('Seeding failed:', err);
+    process.exit(1);
+  });
+}
+
+module.exports = { seedNotesHierarchyIfEmpty };

@@ -310,6 +310,26 @@ We believe in writing simple, elegant, high-performance code without unnecessary
   }
 ];
 
+async function seedJobsIfEmpty() {
+  const existingCount = await Job.countDocuments();
+  if (existingCount > 0) {
+    return { seeded: false, count: existingCount };
+  }
+
+  const adminUser = await User.findOne({ role: 'admin' });
+  const posterId = adminUser ? adminUser._id : null;
+
+  for (const j of jobsData) {
+    await Job.findOneAndUpdate(
+      { title: j.title, company: j.company },
+      { ...j, postedBy: posterId },
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
+    );
+  }
+  console.log(`✅ Bootstrapped ${jobsData.length} jobs & internships.`);
+  return { seeded: true, count: jobsData.length };
+}
+
 async function seed() {
   try {
     const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/notesx';
@@ -324,7 +344,7 @@ async function seed() {
       await Job.findOneAndUpdate(
         { title: j.title, company: j.company },
         { ...j, postedBy: posterId },
-        { upsert: true, new: true, setDefaultsOnInsert: true }
+        { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
       );
       console.log(`✅ Seeded Job: ${j.title} @ ${j.company}`);
     }
@@ -338,4 +358,8 @@ async function seed() {
   }
 }
 
-seed();
+if (require.main === module) {
+  seed();
+}
+
+module.exports = { seedJobsIfEmpty };

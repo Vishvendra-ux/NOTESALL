@@ -38,7 +38,8 @@ export const clearAuthToken = () => {
   }
 };
 
-export const api = axios.create({ baseURL, timeout: 10000 });
+// Render Free-tier cold starts can take ~25-45s after inactivity
+export const api = axios.create({ baseURL, timeout: 45000 });
 
 api.interceptors.request.use((config) => {
   const token = getAuthToken();

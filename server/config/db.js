@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { bootstrapEmptyCatalogs } = require('../services/bootstrapCatalogService');
 
 const seedAdminUser = async () => {
   try {
@@ -71,6 +72,11 @@ const connectDB = async (retryCount = 0) => {
     const conn = await mongoose.connect(process.env.MONGO_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     await seedAdminUser();
+    // Populate empty catalog collections (Roadmaps, Notes, Colleges, Jobs, GATE, Doubts, Projects)
+    // Strictly non-destructive: only inserts when a collection has 0 documents.
+    if (process.env.NODE_ENV !== 'test' && process.env.SKIP_CATALOG_BOOTSTRAP !== 'true') {
+      await bootstrapEmptyCatalogs();
+    }
     // Shared demo login is development-only; never created in production.
     if (process.env.NODE_ENV !== 'production' && process.env.ENABLE_DEMO_USER === 'true') {
       await seedDemoStudentUser();

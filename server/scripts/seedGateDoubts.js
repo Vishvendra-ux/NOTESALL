@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 
@@ -6,49 +8,53 @@ const Answer = require('../models/Answer');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
 
-// SAFETY: destructive reset. Refuses to run in production or without an explicit flag.
-if (process.env.NODE_ENV === 'production' || process.env.ALLOW_DESTRUCTIVE_SEED !== 'true') {
+// SAFETY: destructive reset only runs when executed directly as a CLI script.
+if (require.main === module && (process.env.NODE_ENV === 'production' || process.env.ALLOW_DESTRUCTIVE_SEED !== 'true')) {
   console.error('Refusing to run: this script DELETES existing data. Re-run in development with ALLOW_DESTRUCTIVE_SEED=true');
   process.exit(1);
 }
 
 
-const seedDoubts = async () => {
-  try {
-    console.log('Connecting to MongoDB...');
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to MongoDB for GateOverflow seeding.');
+const populateGateDoubts = async ({ destructive = false } = {}) => {
+    const makeUnusablePassword = () => bcrypt.hash(crypto.randomBytes(24).toString('hex'), 10);
 
     // Fetch or create users to act as askers and answerers
-    let admin = await User.findOne({ email: 'pratapsinghvishvendra6@gmail.com' });
     let student = await User.findOne({ email: 'rahul.gate@gmail.com' });
 
     if (!student) {
       student = await User.create({
         name: 'Rahul Sharma',
         email: 'rahul.gate@gmail.com',
-        password: 'hashedpassword',
+        password: await makeUnusablePassword(),
         role: 'student',
         reputation: 340,
         badges: ['🔥 Top Contributor', 'GATE Ranker'],
         collegeName: 'GLA University',
         course: 'B.Tech CSE',
-        year: '3rd Year'
+        year: '3rd Year',
+        isOnboarded: true,
+        isVerified: true
       });
     }
+
+    let admin = await User.findOne({ email: 'pratapsinghvishvendra6@gmail.com' })
+      || await User.findOne({ role: 'admin' })
+      || student;
 
     let topper = await User.findOne({ email: 'priya.topper@iitb.ac.in' });
     if (!topper) {
       topper = await User.create({
         name: 'Priya Patel (AIR 14)',
         email: 'priya.topper@iitb.ac.in',
-        password: 'hashedpassword',
+        password: await makeUnusablePassword(),
         role: 'student',
         reputation: 1850,
         badges: ['⭐ Gold Contributor', 'AIR 14 CSE'],
         collegeName: 'IIT Bombay',
         course: 'M.Tech CSE',
-        year: '1st Year'
+        year: '1st Year',
+        isOnboarded: true,
+        isVerified: true
       });
     }
 
@@ -57,19 +63,22 @@ const seedDoubts = async () => {
       faculty = await User.create({
         name: 'Prof. S. K. Verma',
         email: 'prof.verma@glau.ac.in',
-        password: 'hashedpassword',
+        password: await makeUnusablePassword(),
         role: 'moderator',
         reputation: 4200,
         badges: ['🎓 Faculty Mentor', 'Verified Educator'],
-        collegeName: 'GLA University'
+        collegeName: 'GLA University',
+        isOnboarded: true,
+        isVerified: true
       });
     }
 
-    // Clean existing doubts, answers, and comments
-    await Doubt.deleteMany({});
-    await Answer.deleteMany({});
-    await Comment.deleteMany({});
-    console.log('Cleaned existing doubts data.');
+    if (destructive) {
+      await Doubt.deleteMany({});
+      await Answer.deleteMany({});
+      await Comment.deleteMany({});
+      console.log('Cleaned existing doubts data.');
+    }
 
     // 1. Operating Systems - Semaphores
     const doubt1 = await Doubt.create({
@@ -508,7 +517,28 @@ Can someone provide the circuit diagram and selection line inputs?`,
       answersCount: 0
     });
 
+    const totalDoubts = await Doubt.countDocuments();
+    return { count: totalDoubts };
+};
+
+async function seedGateDoubtsIfEmpty() {
+  const existingCount = await Doubt.countDocuments();
+  if (existingCount > 0) {
+    return { seeded: false, count: existingCount };
+  }
+  const result = await populateGateDoubts({ destructive: false });
+  console.log(`✅ Bootstrapped ${result.count} GATE Overflow doubts & solutions.`);
+  return { seeded: true, count: result.count };
+}
+
+const seedDoubts = async () => {
+  try {
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('Connected to MongoDB for GateOverflow seeding.');
+    await populateGateDoubts({ destructive: true });
     console.log('✅ Successfully seeded realistic GATE Overflow questions, answers, and comments!');
+    await mongoose.disconnect();
     process.exit(0);
   } catch (err) {
     console.error('❌ Error seeding doubts:', err);
@@ -516,4 +546,8 @@ Can someone provide the circuit diagram and selection line inputs?`,
   }
 };
 
-seedDoubts();
+if (require.main === module) {
+  seedDoubts();
+}
+
+module.exports = { seedGateDoubtsIfEmpty };

@@ -250,78 +250,85 @@ const collegesToSeed = [
   }
 ];
 
+async function upsertCommunityCatalog() {
+  for (const data of collegesToSeed) {
+    let college = await College.findOne({ slug: data.slug });
+    if (!college) {
+      college = await College.create(data);
+    } else {
+      await College.updateOne({ slug: data.slug }, data);
+    }
+
+    const postsCount = await CommunityPost.countDocuments({ collegeSlug: data.slug });
+    if (postsCount === 0) {
+      await CommunityPost.create([
+        {
+          collegeId: college._id,
+          collegeSlug: college.slug,
+          author: 'Aman Verma',
+          role: '3rd Year CSE',
+          title: `Mid-Sem Exam Dates Announced for ${college.name}!`,
+          content: 'The date sheet for Sem 5 exams is out on the university portal. Exams start from Oct 15th.',
+          tag: 'Announcement',
+          upvotes: 45,
+          commentsCount: 18
+        },
+        {
+          collegeId: college._id,
+          collegeSlug: college.slug,
+          author: 'Neha Dixit',
+          role: '4th Year CSE',
+          title: 'Campus Hackathon 2026 Registration Open - Prize Pool ₹1,50,000!',
+          content: 'Looking for 2 team members proficient in React + Node.js for 36-hr hackathon next weekend.',
+          tag: 'Hackathon',
+          upvotes: 89,
+          commentsCount: 32
+        }
+      ]);
+    }
+
+    const eventsCount = await CampusEvent.countDocuments({ collegeSlug: data.slug });
+    if (eventsCount === 0) {
+      await CampusEvent.create([
+        {
+          collegeId: college._id,
+          collegeSlug: college.slug,
+          title: 'Sem 5 Mid-Term Examinations',
+          date: 'Oct 15 - Oct 18',
+          department: 'Department of CSE & IT',
+          type: 'Exam',
+        },
+        {
+          collegeId: college._id,
+          collegeSlug: college.slug,
+          title: 'Campus Hackathon 2026',
+          date: 'Oct 24',
+          department: 'All Departments',
+          type: 'Hackathon',
+        }
+      ]);
+    }
+  }
+}
+
+async function seedCommunityIfEmpty() {
+  const existingCount = await College.countDocuments();
+  if (existingCount > 0) {
+    return { seeded: false, count: existingCount };
+  }
+  await upsertCommunityCatalog();
+  console.log(`✅ Bootstrapped ${collegesToSeed.length} college communities.`);
+  return { seeded: true, count: collegesToSeed.length };
+}
+
 const seedData = async () => {
   try {
     const connStr = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/notesx';
     await mongoose.connect(connStr);
     console.log('MongoDB Connected for seeding community data...');
-
-    for (const data of collegesToSeed) {
-      let college = await College.findOne({ slug: data.slug });
-      if (!college) {
-        college = await College.create(data);
-        console.log(`Created college: ${college.name}`);
-      } else {
-        await College.updateOne({ slug: data.slug }, data);
-        console.log(`Updated college: ${college.name}`);
-      }
-
-      // Seed Posts if empty for this college
-      const postsCount = await CommunityPost.countDocuments({ collegeSlug: data.slug });
-      if (postsCount === 0) {
-        await CommunityPost.create([
-          {
-            collegeId: college._id,
-            collegeSlug: college.slug,
-            author: 'Aman Verma',
-            role: '3rd Year CSE',
-            title: `Mid-Sem Exam Dates Announced for ${college.name}!`,
-            content: 'The date sheet for Sem 5 exams is out on the university portal. Exams start from Oct 15th.',
-            tag: 'Announcement',
-            upvotes: 45,
-            commentsCount: 18
-          },
-          {
-            collegeId: college._id,
-            collegeSlug: college.slug,
-            author: 'Neha Dixit',
-            role: '4th Year CSE',
-            title: 'Campus Hackathon 2026 Registration Open - Prize Pool ₹1,50,000!',
-            content: 'Looking for 2 team members proficient in React + Node.js for 36-hr hackathon next weekend.',
-            tag: 'Hackathon',
-            upvotes: 89,
-            commentsCount: 32
-          }
-        ]);
-        console.log(`Seeded posts for: ${college.name}`);
-      }
-
-      // Seed Events if empty
-      const eventsCount = await CampusEvent.countDocuments({ collegeSlug: data.slug });
-      if (eventsCount === 0) {
-        await CampusEvent.create([
-          {
-            collegeId: college._id,
-            collegeSlug: college.slug,
-            title: 'Sem 5 Mid-Term Examinations',
-            date: 'Oct 15 - Oct 18',
-            department: 'Department of CSE & IT',
-            type: 'Exam',
-          },
-          {
-            collegeId: college._id,
-            collegeSlug: college.slug,
-            title: 'Campus Hackathon 2026',
-            date: 'Oct 24',
-            department: 'All Departments',
-            type: 'Hackathon',
-          }
-        ]);
-        console.log(`Seeded events for: ${college.name}`);
-      }
-    }
-
+    await upsertCommunityCatalog();
     console.log('Community Data Seeding Completed Successfully!');
+    await mongoose.disconnect();
     process.exit(0);
   } catch (error) {
     console.error('Error seeding community data:', error);
@@ -329,4 +336,8 @@ const seedData = async () => {
   }
 };
 
-seedData();
+if (require.main === module) {
+  seedData();
+}
+
+module.exports = { seedCommunityIfEmpty };
