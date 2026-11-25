@@ -9,6 +9,7 @@ import {
 import { AuthContext } from '../../context/AuthContext';
 import { doubtService } from '../../services/api';
 import MarkdownRenderer from './MarkdownRenderer';
+import { BotBadge } from '../BotBadge';
 
 export default function DoubtDetail() {
   const { id } = useParams();
@@ -576,6 +577,7 @@ export default function DoubtDetail() {
                         <b className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                           {doubt.askerId?.name || 'Anonymous Student'}
                         </b>
+                        {doubt.askerId?.isBot && <BotBadge />}
                         {doubt.askerId?.reputation !== undefined && (
                           <span className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-1.5 py-0.2 rounded border border-indigo-100 dark:border-indigo-900/60">
                             {doubt.askerId.reputation} XP
@@ -823,6 +825,7 @@ export default function DoubtDetail() {
                                 <b className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                                   {ans.answererId?.name || 'Anonymous Contributor'}
                                 </b>
+                                {!isAiAns && ans.answererId?.isBot && <BotBadge />}
                                 {isAiAns ? (
                                   <span className="text-[10px] font-black text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded border border-indigo-200 dark:border-indigo-800">
                                     24/7 AI Verified

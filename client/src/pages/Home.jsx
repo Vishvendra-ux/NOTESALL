@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { BotBadge } from '../components/BotBadge';
 
 const quickSurfPills = [
   { name: 'Course Notes', to: '/notes', icon: BookOpen, badge: 'Units 1-5' },
@@ -1058,21 +1059,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* STUDENT TESTIMONIALS & REAL PROOF */}
+      {/* SAMPLE STUDENT USE CASES & REAL CONTRIBUTION INVITE */}
       <section className="space-y-8">
         <div className="text-center max-w-2xl mx-auto">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200/60 bg-indigo-50/70 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-indigo-700 dark:border-indigo-900/60 dark:bg-indigo-950/60 dark:text-indigo-300">
-            <Star size={13} className="fill-indigo-600 text-indigo-600" /> Student Stories
+            <Star size={13} className="fill-indigo-600 text-indigo-600" /> Example Student Journeys
           </span>
           <h2 className="mt-2 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-white sm:text-4xl">
-            Loved by Students Across Indian Campuses
+            How Students Use NOTESX Across Campuses
           </h2>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-            From GPA turnarounds to national rank achievements and tech internships—hear directly from students who use NOTESX every single day.
+            The sample stories below are pre-loaded <BotBadge label="BOT" className="mx-1 align-middle" /> previews showing how NOTESX helps — sign in with Google and contribute your real notes, coding handles, and doubts to make every board 100% real!
           </p>
         </div>
 
-        {/* Photorealistic Student Testimonial Cards */}
+        {/* Sample Student Journey Cards (transparently marked BOT) */}
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((t) => (
             <div
@@ -1080,10 +1081,13 @@ export default function Home() {
               className="interactive-hover-card flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-6 shadow-sm transition hover:border-indigo-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
             >
               <div>
-                <span className="animate-badge-bounce inline-flex items-center gap-1 rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-bold text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300">
-                  <Star size={12} className="fill-indigo-600 text-indigo-600" />
-                  {t.highlight}
-                </span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="animate-badge-bounce inline-flex items-center gap-1 rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-bold text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300">
+                    <Star size={12} className="fill-indigo-600 text-indigo-600" />
+                    {t.highlight}
+                  </span>
+                  <BotBadge label="SAMPLE BOT" />
+                </div>
 
                 <p className="mt-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 italic">
                   "{t.quote}"
@@ -1096,13 +1100,14 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#fb923c] via-[#fbbf24] to-[#10b981] animate-spin-slow rounded-full" />
                   <img
                     src={t.avatar}
-                    alt={`Portrait of ${t.name}, student at ${t.college}`}
+                    alt={`Sample portrait for ${t.name}`}
                     className="relative h-12 w-12 rounded-full border-2 border-white dark:border-slate-900 object-cover shadow-sm"
                   />
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-slate-950 dark:text-white">
-                    {t.name}
+                  <h4 className="text-sm font-extrabold text-slate-950 dark:text-white flex items-center gap-1.5">
+                    <span>{t.name}</span>
+                    <BotBadge label="BOT" />
                   </h4>
                   <p className="text-xs text-indigo-600 font-semibold dark:text-indigo-400">
                     {t.role}
@@ -1264,13 +1269,19 @@ export default function Home() {
               </span>
             </div>
             <div className="flex-1 pr-1">
-              <div className="flex items-center justify-between text-[10px] font-bold text-amber-300">
-                <span className="truncate">{liveActivities[activityIndex].college}</span>
-                <span className="text-slate-400 font-mono text-[9px]">{liveActivities[activityIndex].time}</span>
+              <div className="flex items-center justify-between gap-2 text-[10px] font-bold text-amber-300">
+                <span className="truncate flex items-center gap-1.5">
+                  <BotBadge label="BOT" className="!bg-amber-400/20 !text-amber-200 !border-amber-400/40" />
+                  <span>{liveActivities[activityIndex].college}</span>
+                </span>
+                <span className="text-slate-400 font-mono text-[9px]">Sample</span>
               </div>
               <p className="mt-0.5 text-xs font-semibold text-white leading-tight">
                 <span className="text-[#fb923c]">{liveActivities[activityIndex].student}</span>{' '}
                 <span className="text-slate-300">{liveActivities[activityIndex].action}</span>
+              </p>
+              <p className="mt-1 text-[10px] text-emerald-300/90 font-medium">
+                Example activity — sign in &amp; contribute real data to shine here!
               </p>
             </div>
             <button

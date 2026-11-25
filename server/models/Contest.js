@@ -48,6 +48,7 @@ const leaderboardEntrySchema = new mongoose.Schema({
   solvedCount: { type: Number, default: 0 },
   score: { type: Number, default: 0 },
   solvedQuestions: [{ type: String }],
+  isBot: { type: Boolean, default: false },
   lastSolvedAt: { type: Date, default: Date.now }
 });
 

@@ -28,12 +28,13 @@ const populateGateDoubts = async ({ destructive = false } = {}) => {
         password: await makeUnusablePassword(),
         role: 'student',
         reputation: 340,
-        badges: ['🔥 Top Contributor', 'GATE Ranker'],
+        badges: ['🤖 BOT', 'GATE Ranker'],
         collegeName: 'GLA University',
         course: 'B.Tech CSE',
         year: '3rd Year',
         isOnboarded: true,
-        isVerified: true
+        isVerified: true,
+        isBot: true
       });
     }
 
@@ -49,12 +50,13 @@ const populateGateDoubts = async ({ destructive = false } = {}) => {
         password: await makeUnusablePassword(),
         role: 'student',
         reputation: 1850,
-        badges: ['⭐ Gold Contributor', 'AIR 14 CSE'],
+        badges: ['🤖 BOT', 'AIR 14 CSE'],
         collegeName: 'IIT Bombay',
         course: 'M.Tech CSE',
         year: '1st Year',
         isOnboarded: true,
-        isVerified: true
+        isVerified: true,
+        isBot: true
       });
     }
 
@@ -66,10 +68,11 @@ const populateGateDoubts = async ({ destructive = false } = {}) => {
         password: await makeUnusablePassword(),
         role: 'moderator',
         reputation: 4200,
-        badges: ['🎓 Faculty Mentor', 'Verified Educator'],
+        badges: ['🤖 BOT', 'Faculty Mentor'],
         collegeName: 'GLA University',
         isOnboarded: true,
-        isVerified: true
+        isVerified: true,
+        isBot: true
       });
     }
 

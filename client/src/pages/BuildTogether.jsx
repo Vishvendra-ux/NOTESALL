@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { buildTogetherService } from '../services/api';
+import { BotBadge, RealDataBanner } from '../components/BotBadge';
 
 const CATEGORIES = [
   'All',
@@ -605,6 +606,17 @@ export default function BuildTogether() {
             </button>
           </div>
         ) : (
+          <>
+          <RealDataBanner
+            className="mb-6"
+            title="Pitch Your Real Project & Recruit Real Teammates!"
+            message="Pre-loaded starter projects & creators marked BOT are illustrative examples. Post your real hackathon, capstone, or startup project to team up with real students!"
+            ctaLabel="Pitch a Real Project"
+            onAction={() => {
+              if (!user) return requireLogin();
+              setIsPitchModalOpen(true);
+            }}
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedProjects.map(project => {
               const slots = project.bookingSlots || [];
@@ -638,7 +650,7 @@ export default function BuildTogether() {
                           : 'bg-rose-50 text-rose-700 border border-rose-200'
                       }`}>
                         {project.isDemo ? (
-                          <span>Illustrative example</span>
+                          <span>BOT Example</span>
                         ) : project.status === 'Completed' ? (
                           <span>Project Completed</span>
                         ) : !isFull ? (
@@ -749,8 +761,9 @@ export default function BuildTogether() {
                         )}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs font-bold text-slate-900 truncate">
-                          {project.creatorName}
+                        <p className="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
+                          <span className="truncate">{project.creatorName}</span>
+                          {project.isDemo && <BotBadge />}
                         </p>
                         <p className="text-xs text-slate-600 truncate">
                           {project.creatorCollege || 'Campus Pitcher'}
@@ -786,6 +799,7 @@ export default function BuildTogether() {
               );
             })}
           </div>
+          </>
         )}
       </div>
 
@@ -858,8 +872,9 @@ export default function BuildTogether() {
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <p className="text-sm font-bold text-slate-900 flex items-center gap-1.5 flex-wrap">
                     <span>{selectedProject.creatorName}</span>
+                    {selectedProject.isDemo && <BotBadge />}
                     <span className="px-2 py-0.5 text-xs bg-indigo-100 text-indigo-700 rounded-full font-bold">
                       👑 Project Pitcher
                     </span>
@@ -1032,9 +1047,13 @@ export default function BuildTogether() {
                               )}
                             </div>
                             <div className="min-w-0">
-                              <p className="text-xs font-bold text-white truncate flex items-center gap-1">
+                              <p className="text-xs font-bold text-white truncate flex items-center gap-1.5">
                                 <span>{slot.filledBy?.name || 'Verified Teammate'}</span>
-                                <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                                {(selectedProject.isDemo || !slot.filledBy?.userId) ? (
+                                  <BotBadge className="!bg-amber-400/20 !text-amber-200 !border-amber-400/40" />
+                                ) : (
+                                  <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                                )}
                               </p>
                               <p className="text-xs text-slate-400 truncate">
                                 {slot.filledBy?.college || 'Engineering Campus'}

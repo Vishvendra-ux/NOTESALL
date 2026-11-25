@@ -10,6 +10,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { notesService, aiService } from '../../services/api';
 import RatingStars from './RatingStars';
 import MarkdownRenderer from '../doubts/MarkdownRenderer';
+import { BotBadge } from '../BotBadge';
 
 const getEmbedUrl = (url) => {
   if (!url) return null;
@@ -677,8 +678,11 @@ export default function NoteViewerModal({
                           {rev.userId?.name ? rev.userId.name[0] : 'S'}
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-slate-900">{rev.userId?.name || 'Rahul Sharma'}</p>
-                          <p className="text-[10px] text-slate-400">{rev.userId?.collegeName || 'GLA University'}</p>
+                          <p className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                            <span>{rev.userId?.name || 'Student Reviewer'}</span>
+                            {rev.userId?.isBot && <BotBadge />}
+                          </p>
+                          <p className="text-[10px] text-slate-400">{rev.userId?.collegeName || 'NOTESX Campus'}</p>
                         </div>
                       </div>
                       <RatingStars value={rev.rating || 5} size={13} />

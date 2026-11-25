@@ -30,7 +30,7 @@ exports.create = async (req, res, next) => {
     // answersCount / lastActivityAt are updated by the Answer post('save') hook
 
     const populated = await Answer.findById(answer._id)
-      .populate('answererId', 'name profilePhoto reputation badges collegeName');
+      .populate('answererId', 'name profilePhoto reputation badges collegeName isBot');
 
     res.status(201).json({
       ...populated.toObject(),
@@ -50,13 +50,13 @@ exports.create = async (req, res, next) => {
 exports.list = async (req, res, next) => {
   try {
     const answers = await Answer.find({ doubtId: req.params.doubtId })
-      .populate('answererId', 'name profilePhoto reputation badges collegeName')
+      .populate('answererId', 'name profilePhoto reputation badges collegeName isBot')
       .sort({ isAccepted: -1, upvotes: -1, createdAt: 1 })
       .lean();
 
     const answerIds = answers.map(a => a._id);
     const comments = await Comment.find({ parentId: { $in: answerIds }, onModel: 'Answer' })
-      .populate('authorId', 'name profilePhoto reputation')
+      .populate('authorId', 'name profilePhoto reputation isBot')
       .sort({ createdAt: 1 })
       .lean();
 

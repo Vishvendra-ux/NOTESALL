@@ -10,6 +10,7 @@ import { doubtService } from '../services/api';
 import DoubtCard from '../components/doubts/DoubtCard';
 import DoubtSidebar from '../components/doubts/DoubtSidebar';
 import AskDoubtModal from '../components/doubts/AskDoubtModal';
+import { RealDataBanner } from '../components/BotBadge';
 import DoubtDetail from '../components/doubts/DoubtDetail';
 
 export default function Doubts() {
@@ -265,6 +266,21 @@ function DoubtList({ user, isAskDirectly = false, searchParams, setSearchParams 
           <span>+ Ask a Doubt</span>
         </button>
       </div>
+
+      {/* Encourage Real Student Doubts & Solutions */}
+      <RealDataBanner
+        className="mb-6"
+        title="Post Your Real Doubts & Peer Answers!"
+        message="Pre-loaded starter GATE questions & solutions are tagged BOT. Ask your genuine semester/GATE doubts and share real answers to build an authentic peer-driven forum."
+        ctaLabel="Ask a Real Doubt"
+        onAction={() => {
+          if (!user) {
+            alert('Please log in to post a question.');
+            return;
+          }
+          setIsAskModalOpen(true);
+        }}
+      />
 
       {/* Main Grid Layout: Feed (3 cols) + Sidebar (1 col) */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">

@@ -79,7 +79,7 @@ exports.list = async (req, res, next) => {
 
     const [doubts, total] = await Promise.all([
       Doubt.find(query)
-        .populate('askerId', 'name profilePhoto reputation badges collegeName')
+        .populate('askerId', 'name profilePhoto reputation badges collegeName isBot')
         .sort(sortOption)
         .skip(skip)
         .limit(take)
@@ -152,7 +152,7 @@ exports.get = async (req, res, next) => {
       req.params.id,
       { $inc: { views: 1 } },
       { new: true }
-    ).populate('askerId', 'name profilePhoto reputation badges collegeName');
+    ).populate('askerId', 'name profilePhoto reputation badges collegeName isBot');
 
     if (!doubt) {
       return res.status(404).json({ message: 'Doubt not found' });
@@ -160,7 +160,7 @@ exports.get = async (req, res, next) => {
 
     // Fetch comments on this doubt
     const comments = await Comment.find({ parentId: doubt._id, onModel: 'Doubt' })
-      .populate('authorId', 'name profilePhoto reputation')
+      .populate('authorId', 'name profilePhoto reputation isBot')
       .sort({ createdAt: 1 })
       .lean();
 
@@ -262,7 +262,7 @@ exports.create = async (req, res, next) => {
       }
     }
 
-    const populated = await Doubt.findById(doubt._id).populate('askerId', 'name profilePhoto reputation badges collegeName');
+    const populated = await Doubt.findById(doubt._id).populate('askerId', 'name profilePhoto reputation badges collegeName isBot');
     res.status(201).json(populated);
   } catch (error) {
     next(error);
@@ -522,7 +522,7 @@ exports.generateAiAnswer = async (req, res, next) => {
     const existingAiAnswer = await Answer.findOne({
       doubtId: doubt._id,
       $or: [{ isAiGenerated: true }, { answererId: aiTutor._id }]
-    }).populate('answererId', 'name profilePhoto reputation badges collegeName email');
+    }).populate('answererId', 'name profilePhoto reputation badges collegeName email isBot');
 
     if (existingAiAnswer && !req.body.regenerate) {
       return res.json({
@@ -555,7 +555,7 @@ exports.generateAiAnswer = async (req, res, next) => {
     }
 
     const populated = await Answer.findById(savedAnswer._id)
-      .populate('answererId', 'name profilePhoto reputation badges collegeName email');
+      .populate('answererId', 'name profilePhoto reputation badges collegeName email isBot');
 
     res.status(201).json({
       ...populated.toObject(),

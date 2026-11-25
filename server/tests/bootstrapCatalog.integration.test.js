@@ -124,4 +124,20 @@ test('bootstrapEmptyCatalogs populates all 24 roadmaps and empty catalogs safely
   assert.equal(await Roadmap.countDocuments(), roadmaps);
   assert.equal(await Note.countDocuments(), notes);
   assert.equal(await Doubt.countDocuments(), doubts);
+
+  // Verify pre-loaded bot personas, starter posts, and benchmark coders are flagged isBot: true
+  const User = require('../models/User');
+  const CommunityPost = require('../models/CommunityPost');
+  const botUsers = await User.countDocuments({ isBot: true });
+  const botPosts = await CommunityPost.countDocuments({ isBot: true });
+  assert.ok(botUsers >= 3, `Expected seeded bot users to be flagged isBot=true, got ${botUsers}`);
+  assert.ok(botPosts > 0, `Expected seeded starter posts to be flagged isBot=true, got ${botPosts}`);
+
+  const lbRes = await fetch(`${baseUrl}/api/contests/coding-leaderboard`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  assert.equal(lbRes.status, 200);
+  const lbBody = await lbRes.json();
+  assert.ok(lbBody.coders.length > 0);
+  assert.ok(lbBody.coders.every((c) => c.isBot === true), 'All pre-loaded benchmark coders must carry isBot=true');
 });

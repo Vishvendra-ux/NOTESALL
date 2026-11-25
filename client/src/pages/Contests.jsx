@@ -7,6 +7,7 @@ import {
 import { AuthContext } from '../context/AuthContext';
 import { contestService } from '../services/api';
 import CodingProfileTrackerSection from '../components/contests/CodingProfileTrackerSection';
+import { BotBadge } from '../components/BotBadge';
 
 const DEFAULT_QUESTIONS = [
   {
@@ -92,12 +93,12 @@ const DEFAULT_QUESTIONS = [
 ];
 
 const INITIAL_INDIVIDUALS = [
-  { userName: 'Rahul Verma', collegeName: 'IIT Delhi', solvedCount: 3, score: 400, solvedQuestions: ['q1', 'q2', 'q3'] },
-  { userName: 'Priya Sharma', collegeName: 'GLA University', solvedCount: 2, score: 300, solvedQuestions: ['q1', 'q3'] },
-  { userName: 'Aditya Singh', collegeName: 'BITS Pilani', solvedCount: 2, score: 300, solvedQuestions: ['q1', 'q4'] },
-  { userName: 'Ananya Gupta', collegeName: 'AKTU', solvedCount: 2, score: 200, solvedQuestions: ['q1', 'q3'] },
-  { userName: 'Siddharth Jain', collegeName: 'IIT Bombay', solvedCount: 1, score: 100, solvedQuestions: ['q1'] },
-  { userName: 'Neha Patel', collegeName: 'DTU', solvedCount: 1, score: 100, solvedQuestions: ['q3'] },
+  { userName: 'Rahul Verma', collegeName: 'IIT Delhi', solvedCount: 3, score: 400, solvedQuestions: ['q1', 'q2', 'q3'], isBot: true },
+  { userName: 'Priya Sharma', collegeName: 'GLA University', solvedCount: 2, score: 300, solvedQuestions: ['q1', 'q3'], isBot: true },
+  { userName: 'Aditya Singh', collegeName: 'BITS Pilani', solvedCount: 2, score: 300, solvedQuestions: ['q1', 'q4'], isBot: true },
+  { userName: 'Ananya Gupta', collegeName: 'AKTU', solvedCount: 2, score: 200, solvedQuestions: ['q1', 'q3'], isBot: true },
+  { userName: 'Siddharth Jain', collegeName: 'IIT Bombay', solvedCount: 1, score: 100, solvedQuestions: ['q1'], isBot: true },
+  { userName: 'Neha Patel', collegeName: 'DTU', solvedCount: 1, score: 100, solvedQuestions: ['q3'], isBot: true },
 ];
 
 const INITIAL_COLLEGES = [
@@ -680,6 +681,7 @@ export default function Contests() {
                           <p className="font-bold text-xs text-slate-900 dark:text-white truncate">
                             {student.userName}
                           </p>
+                          {(student.isBot || !student.userId) && !isCurrent && <BotBadge />}
                           {isCurrent && (
                             <span className="text-[9px] font-extrabold text-indigo-700 bg-indigo-100 px-1 py-0.2 rounded shrink-0">
                               You
@@ -707,12 +709,15 @@ export default function Contests() {
               </div>
             )}
             
-            <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700/50 text-center">
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700/50 text-center space-y-1">
+              <p className="text-[10px] font-medium text-slate-500">
+                Starter entries tagged <span className="font-black text-amber-700">BOT</span> are pre-loaded — solve problems to enter pure real scores!
+              </p>
               <button 
                 onClick={() => setArenaOpen(true)}
                 className="text-xs font-bold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1 cursor-pointer"
               >
-                Solve problems & rank up your college <ArrowUpRight size={13} />
+                Solve problems &amp; rank up your college <ArrowUpRight size={13} />
               </button>
             </div>
           </div>

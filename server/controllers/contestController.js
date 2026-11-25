@@ -114,12 +114,12 @@ const DEFAULT_QUESTIONS = [
 ];
 
 const INITIAL_INDIVIDUALS = [
-  { userName: 'Rahul Verma', collegeName: 'IIT Delhi', solvedCount: 3, score: 400, solvedQuestions: ['q1', 'q2', 'q3'], lastSolvedAt: new Date(Date.now() - 15 * 60000) },
-  { userName: 'Priya Sharma', collegeName: 'GLA University', solvedCount: 2, score: 300, solvedQuestions: ['q1', 'q3'], lastSolvedAt: new Date(Date.now() - 25 * 60000) },
-  { userName: 'Aditya Singh', collegeName: 'BITS Pilani', solvedCount: 2, score: 300, solvedQuestions: ['q1', 'q4'], lastSolvedAt: new Date(Date.now() - 32 * 60000) },
-  { userName: 'Ananya Gupta', collegeName: 'AKTU', solvedCount: 2, score: 200, solvedQuestions: ['q1', 'q3'], lastSolvedAt: new Date(Date.now() - 40 * 60000) },
-  { userName: 'Siddharth Jain', collegeName: 'IIT Bombay', solvedCount: 1, score: 100, solvedQuestions: ['q1'], lastSolvedAt: new Date(Date.now() - 50 * 60000) },
-  { userName: 'Neha Patel', collegeName: 'DTU', solvedCount: 1, score: 100, solvedQuestions: ['q3'], lastSolvedAt: new Date(Date.now() - 58 * 60000) },
+  { userName: 'Rahul Verma', collegeName: 'IIT Delhi', solvedCount: 3, score: 400, solvedQuestions: ['q1', 'q2', 'q3'], isBot: true, lastSolvedAt: new Date(Date.now() - 15 * 60000) },
+  { userName: 'Priya Sharma', collegeName: 'GLA University', solvedCount: 2, score: 300, solvedQuestions: ['q1', 'q3'], isBot: true, lastSolvedAt: new Date(Date.now() - 25 * 60000) },
+  { userName: 'Aditya Singh', collegeName: 'BITS Pilani', solvedCount: 2, score: 300, solvedQuestions: ['q1', 'q4'], isBot: true, lastSolvedAt: new Date(Date.now() - 32 * 60000) },
+  { userName: 'Ananya Gupta', collegeName: 'AKTU', solvedCount: 2, score: 200, solvedQuestions: ['q1', 'q3'], isBot: true, lastSolvedAt: new Date(Date.now() - 40 * 60000) },
+  { userName: 'Siddharth Jain', collegeName: 'IIT Bombay', solvedCount: 1, score: 100, solvedQuestions: ['q1'], isBot: true, lastSolvedAt: new Date(Date.now() - 50 * 60000) },
+  { userName: 'Neha Patel', collegeName: 'DTU', solvedCount: 1, score: 100, solvedQuestions: ['q3'], isBot: true, lastSolvedAt: new Date(Date.now() - 58 * 60000) },
 ];
 
 const INITIAL_COLLEGES = [
@@ -670,16 +670,17 @@ function buildLeaderboardPayload(dbUsers, query = {}) {
     course: u.course || 'B.Tech CSE',
     year: u.year || '3rd Year',
     profilePhoto: u.profilePhoto || '',
-    isRealUser: true,
+    isRealUser: !u.isBot,
+    isBot: Boolean(u.isBot),
     codingProfiles: u.codingProfiles,
   }));
 
-  // Combine real users with campus benchmark coders (avoiding duplicate names)
+  // Combine real users with pre-loaded benchmark BOT coders (clearly tagged isBot: true)
   const realNames = new Set(realCoders.map((r) => r.name.toLowerCase()));
-  const combined = [
-    ...realCoders,
-    ...SEED_CAMPUS_CODERS.filter((s) => !realNames.has(s.name.toLowerCase())),
-  ];
+  const botCoders = SEED_CAMPUS_CODERS
+    .filter((s) => !realNames.has(s.name.toLowerCase()))
+    .map((s) => ({ ...s, isRealUser: false, isBot: true }));
+  const combined = [...realCoders, ...botCoders];
 
   // Aggregate College Standings across all coders before filtering by college
   const collegeMap = new Map();
@@ -691,7 +692,9 @@ function buildLeaderboardPayload(dbUsers, query = {}) {
       totalScore: 0,
       totalSolved: 0,
       coderCount: 0,
+      realCoderCount: 0,
       topCoder: coder.name,
+      topCoderIsBot: Boolean(coder.isBot),
       topCoderScore: 0,
     };
 
@@ -699,9 +702,11 @@ function buildLeaderboardPayload(dbUsers, query = {}) {
     existing.totalScore += score;
     existing.totalSolved += Number(cp.totalProblemsSolved) || 0;
     existing.coderCount += 1;
+    if (!coder.isBot) existing.realCoderCount += 1;
     if (score >= existing.topCoderScore) {
       existing.topCoderScore = score;
       existing.topCoder = coder.name;
+      existing.topCoderIsBot = Boolean(coder.isBot);
     }
     collegeMap.set(cName, existing);
   }

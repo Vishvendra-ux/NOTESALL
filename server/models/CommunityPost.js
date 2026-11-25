@@ -19,6 +19,10 @@ const communityPostSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  isBot: {
+    type: Boolean,
+    default: false,
+  },
   role: {
     type: String,
     default: 'Campus Student',

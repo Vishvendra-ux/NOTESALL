@@ -1,5 +1,6 @@
 import { ChevronUp, ChevronDown, Check, MessageSquare, Eye, Bookmark, Share2, Tag, Edit3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { BotBadge } from '../BotBadge';
 import { useState } from 'react';
 
 export default function DoubtCard({
@@ -182,6 +183,7 @@ export default function DoubtCard({
               <span className="font-bold text-slate-800 dark:text-slate-200 truncate">
                 {doubt.askerId?.name || 'Anonymous Learner'}
               </span>
+              {doubt.askerId?.isBot && <BotBadge />}
               {doubt.askerId?.reputation !== undefined && (
                 <span className="text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-1.5 py-0.2 rounded border border-indigo-100 dark:border-indigo-900/60">
                   {doubt.askerId.reputation} XP

@@ -110,6 +110,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isBot: {
+    type: Boolean,
+    default: false,
+  },
   careerGoal: {
     type: String,
     default: '',

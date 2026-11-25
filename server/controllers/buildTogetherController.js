@@ -167,11 +167,11 @@ async function seedDefaultProjectsIfEmpty() {
     const count = await ProjectCollab.countDocuments();
     if (count > 0) return;
 
-    // Find any user to act as creator or create fallback reference
-    let defaultUser = await User.findOne();
+    // Use a dedicated BOT creator label on pre-loaded sample projects (never attribute sample data to a real user)
+    let defaultUser = await User.findOne({ isBot: true }) || await User.findOne();
     const fallbackId = defaultUser ? defaultUser._id : new (require('mongoose').Types.ObjectId)();
-    const fallbackName = defaultUser ? defaultUser.name : 'Aarav Sharma';
-    const fallbackCollege = defaultUser ? (defaultUser.collegeName || 'GLA University') : 'GLA University';
+    const fallbackName = 'Aarav Sharma';
+    const fallbackCollege = 'GLA University';
 
     const sampleProjects = [
       {

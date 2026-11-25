@@ -2,6 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const User = require('../models/User');
+const CommunityPost = require('../models/CommunityPost');
+const Contest = require('../models/Contest');
 const GateQuestion = require('../models/GateQuestion');
 const { importQuestions } = require('./gateQuestionImportService');
 const { seedRoadmapsIfEmpty } = require('../scripts/seedRoadmaps');
@@ -32,6 +35,36 @@ async function seedGateQuestionsIfEmpty() {
   return { seeded: true, count: report.inserted };
 }
 
+const SEEDED_BOT_EMAILS = [
+  'rahul.gate@gmail.com',
+  'priya.topper@iitb.ac.in',
+  'prof.verma@glau.ac.in',
+];
+
+/**
+ * Ensures pre-loaded persona accounts and starter posts/leaderboard rows already in the DB
+ * carry isBot: true so the frontend transparently labels every pre-loaded user as BOT.
+ */
+async function syncBotFlagsOnSeededRecords() {
+  await User.updateMany(
+    { email: { $in: SEEDED_BOT_EMAILS }, isBot: { $ne: true } },
+    { $set: { isBot: true } }
+  );
+
+  await CommunityPost.updateMany(
+    { authorId: null, isBot: { $ne: true } },
+    { $set: { isBot: true } }
+  );
+
+  await Contest.updateMany(
+    { 'leaderboard.userId': null },
+    { $set: { 'leaderboard.$[entry].isBot': true } },
+    { arrayFilters: [{ 'entry.userId': null, 'entry.isBot': { $ne: true } }] }
+  );
+
+  return { synced: true };
+}
+
 /**
  * Safely populates empty catalog collections on a brand-new database (e.g., initial Atlas deployment).
  * Strictly non-destructive: every step checks countDocuments() === 0 before writing anything.
@@ -45,6 +78,7 @@ async function bootstrapEmptyCatalogs() {
     ['gateQuestions', seedGateQuestionsIfEmpty],
     ['doubts', seedGateDoubtsIfEmpty],
     ['buildTogether', seedDefaultProjectsIfEmpty],
+    ['botTags', syncBotFlagsOnSeededRecords],
   ];
 
   const summary = {};

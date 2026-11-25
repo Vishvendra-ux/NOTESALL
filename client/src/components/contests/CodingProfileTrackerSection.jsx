@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
 import { contestService } from '../../services/api';
+import { BotBadge, RealDataBanner } from '../BotBadge';
 
 const COLLEGES_LIST = [
   'All',
@@ -352,6 +353,12 @@ export default function CodingProfileTrackerSection() {
         )}
       </div>
 
+      {/* Transparency Notice: Pre-loaded Benchmark Bots vs Real Synced Coders */}
+      <RealDataBanner
+        title="Beat the Benchmark Bots with Real Coding Profiles!"
+        message="Pre-loaded benchmark coders are tagged BOT. Link your real LeetCode, Codeforces & CodeChef usernames above to enter pure verified student stats and push your college to #1."
+      />
+
       {/* ── Unified Leaderboard Controls & Table ── */}
       <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-lg overflow-hidden">
         {/* Filter Bar */}
@@ -492,7 +499,10 @@ export default function CodingProfileTrackerSection() {
                         {col.coderCount} {col.coderCount === 1 ? 'Student' : 'Students'}
                       </td>
                       <td className="py-4 px-5 font-bold text-indigo-600 dark:text-indigo-400">
-                        {col.topCoder}
+                        <span className="inline-flex items-center gap-1.5">
+                          <span>{col.topCoder}</span>
+                          {col.topCoderIsBot && <BotBadge />}
+                        </span>
                       </td>
                       <td className="py-4 px-5 font-bold text-emerald-600">
                         {Number(col.totalSolved || 0).toLocaleString()} Solved
@@ -578,11 +588,12 @@ export default function CodingProfileTrackerSection() {
                               {(coder.name || 'S')[0].toUpperCase()}
                             </div>
                             <div>
-                              <div className="flex items-center gap-1.5">
+                              <div className="flex items-center gap-1.5 flex-wrap">
                                 <span className="font-extrabold text-slate-900 dark:text-white text-xs sm:text-sm">
                                   {coder.name}
                                 </span>
-                                {cp.isVerifiedCoder && (
+                                {(coder.isBot || !coder.isRealUser) && <BotBadge />}
+                                {cp.isVerifiedCoder && !coder.isBot && coder.isRealUser && (
                                   <ShieldCheck
                                     size={14}
                                     className="text-emerald-600 shrink-0"

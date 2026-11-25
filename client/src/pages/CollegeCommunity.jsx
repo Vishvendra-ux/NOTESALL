@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import { BotBadge, RealDataBanner } from '../components/BotBadge';
 
 const fallbackColleges = {
   'gla': {
@@ -254,23 +255,24 @@ const fallbackColleges = {
 };
 
 const sampleNotes = [
-  { id: 1, title: 'Operating Systems - Process Sync & Deadlocks', subject: 'OS', course: 'B.Tech CSE', sem: 'Sem 5', author: 'Aman Verma', rating: 4.9, downloads: '1.2K', likes: 142 },
-  { id: 2, title: 'DBMS Normalization & B+ Trees Hand-written Notes', subject: 'DBMS', course: 'B.Tech CSE', sem: 'Sem 4', author: 'Priya Sharma', rating: 4.8, downloads: '980', likes: 98 },
-  { id: 3, title: 'Design & Analysis of Algorithms (DAA) GATE Level Notes', subject: 'DAA', course: 'B.Tech CSE', sem: 'Sem 5', author: 'Rahul Gupta', rating: 4.9, downloads: '2.1K', likes: 230 },
-  { id: 4, title: 'Compiler Design - Parsing & Syntax Trees', subject: 'CD', course: 'B.Tech CSE', sem: 'Sem 6', author: 'Sneha Patel', rating: 4.7, downloads: '640', likes: 64 },
+  { id: 1, title: 'Operating Systems - Process Sync & Deadlocks', subject: 'OS', course: 'B.Tech CSE', sem: 'Sem 5', author: 'Aman Verma', isBot: true, rating: 4.9, downloads: '1.2K', likes: 142 },
+  { id: 2, title: 'DBMS Normalization & B+ Trees Hand-written Notes', subject: 'DBMS', course: 'B.Tech CSE', sem: 'Sem 4', author: 'Priya Sharma', isBot: true, rating: 4.8, downloads: '980', likes: 98 },
+  { id: 3, title: 'Design & Analysis of Algorithms (DAA) GATE Level Notes', subject: 'DAA', course: 'B.Tech CSE', sem: 'Sem 5', author: 'Rahul Gupta', isBot: true, rating: 4.9, downloads: '2.1K', likes: 230 },
+  { id: 4, title: 'Compiler Design - Parsing & Syntax Trees', subject: 'CD', course: 'B.Tech CSE', sem: 'Sem 6', author: 'Sneha Patel', isBot: true, rating: 4.7, downloads: '640', likes: 64 },
 ];
 
 const sampleLeaderboard = [
-  { rank: 1, name: 'Aditya Sharma', year: '4th Year CSE', xp: '14,250', badges: ['🔥 42 Day Streak', 'Top Contributor'] },
-  { rank: 2, name: 'Ananya Roy', year: '3rd Year CSE', xp: '12,890', badges: ['⚡ 28 Day Streak', 'GATE Prep Specialist'] },
-  { rank: 3, name: 'Karan Patel', year: '3rd Year IT', xp: '11,400', badges: ['🎯 Bug Hunter'] },
-  { rank: 4, name: 'Simran Kaur', year: '2nd Year CSE', xp: '9,820', badges: ['📚 Notes Hero'] },
+  { rank: 1, name: 'Aditya Sharma', isBot: true, year: '4th Year CSE', xp: '14,250', badges: ['🔥 42 Day Streak', 'Top Contributor'] },
+  { rank: 2, name: 'Ananya Roy', isBot: true, year: '3rd Year CSE', xp: '12,890', badges: ['⚡ 28 Day Streak', 'GATE Prep Specialist'] },
+  { rank: 3, name: 'Karan Patel', isBot: true, year: '3rd Year IT', xp: '11,400', badges: ['🎯 Bug Hunter'] },
+  { rank: 4, name: 'Simran Kaur', isBot: true, year: '2nd Year CSE', xp: '9,820', badges: ['📚 Notes Hero'] },
 ];
 
 const initialCampusDoubts = [
   {
     id: 'cd-1',
     author: 'Rohan Mehta',
+    isBot: true,
     role: '2nd Year IT',
     subject: 'Operating Systems',
     title: 'What is the difference between Peterson algorithm and TestAndSet hardware instruction for mutual exclusion?',
@@ -282,6 +284,7 @@ const initialCampusDoubts = [
       {
         id: 'ans-1',
         author: 'Prof. Jayadeva (Faculty)',
+        isBot: true,
         role: 'Faculty - CSE',
         content: 'TestAndSet is an atomic hardware instruction provided by CPU processors that executes atomically (cannot be interrupted). Peterson algorithm is a software solution for 2 processes using flag and turn variables.',
         isAccepted: true,
@@ -294,6 +297,7 @@ const initialCampusDoubts = [
   {
     id: 'cd-2',
     author: 'Anjali Srivastava',
+    isBot: true,
     role: '3rd Year CSE',
     subject: 'DBMS',
     title: 'Why do we need 3NF if BCNF is strictly stronger?',
@@ -305,6 +309,7 @@ const initialCampusDoubts = [
       {
         id: 'ans-2',
         author: 'Aditya Sharma',
+        isBot: true,
         role: '4th Year CSE',
         content: 'Because BCNF decomposition does NOT always preserve functional dependencies! When dependency preservation is required, 3NF is preferred over BCNF.',
         isAccepted: true,
@@ -384,8 +389,8 @@ export default function CollegeCommunity() {
           setPosts(resPosts.data.map(p => ({ ...p, hasUpvoted: Boolean(p.hasUpvoted) })));
         } else {
           setPosts([
-            { id: 1, author: 'Aman Verma', role: '3rd Year CSE', title: `Mid-Sem Exam Dates Announced!`, content: 'The date sheet for Sem 5 exams is out on the portal. Exams start from Oct 15th.', upvotes: 45, hasUpvoted: false, commentsCount: 18, time: '2 hours ago', tag: 'Announcement' },
-            { id: 2, author: 'Neha Dixit', role: '4th Year CSE', title: 'Campus Hackathon 2026 Registration Open - Prize Pool ₹1,50,000!', content: 'Looking for 2 team members proficient in React + Node.js for 36-hr hackathon next weekend.', upvotes: 89, hasUpvoted: false, commentsCount: 32, time: '5 hours ago', tag: 'Hackathon' }
+            { id: 1, author: 'Aman Verma', isBot: true, role: '3rd Year CSE', title: `Mid-Sem Exam Dates Announced!`, content: 'The date sheet for Sem 5 exams is out on the portal. Exams start from Oct 15th.', upvotes: 45, hasUpvoted: false, commentsCount: 18, time: '2 hours ago', tag: 'Announcement' },
+            { id: 2, author: 'Neha Dixit', isBot: true, role: '4th Year CSE', title: 'Campus Hackathon 2026 Registration Open - Prize Pool ₹1,50,000!', content: 'Looking for 2 team members proficient in React + Node.js for 36-hr hackathon next weekend.', upvotes: 89, hasUpvoted: false, commentsCount: 32, time: '5 hours ago', tag: 'Hackathon' }
           ]);
         }
       } catch (err) {
@@ -790,11 +795,18 @@ export default function CollegeCommunity() {
                 </div>
               </form>
 
+              {/* Real Student Data Encouragement */}
+              <RealDataBanner
+                title={`Share Real Updates from ${activeCollege.name}`}
+                message="Starter campus posts marked BOT are pre-loaded placeholders. Post real exam notices, club hackathons, and discussions above to fill your campus feed with pure student data!"
+              />
+
               {/* Feed Posts */}
               <div className="flex flex-col gap-4">
                 {posts.map((post) => {
                   const postId = post._id || post.id;
                   const isUpvoted = post.hasUpvoted || false;
+                  const isBotPost = Boolean(post.isBot || !post.authorId);
 
                   return (
                     <div key={postId} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-indigo-200 transition relative">
@@ -804,7 +816,10 @@ export default function CollegeCommunity() {
                             {post.author ? post.author.charAt(0) : 'S'}
                           </span>
                           <div>
-                            <b className="block text-sm font-bold text-slate-900">{post.author}</b>
+                            <b className="flex items-center gap-1.5 text-sm font-bold text-slate-900">
+                              <span>{post.author}</span>
+                              {isBotPost && <BotBadge />}
+                            </b>
                             <span className="text-[11px] text-slate-500">{post.role || 'CSE Student'} · {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : post.time || 'Recently'}</span>
                           </div>
                         </div>
@@ -922,7 +937,11 @@ export default function CollegeCommunity() {
                   </div>
                   <span className="mt-3 inline-block rounded bg-indigo-50 px-2 py-0.5 text-[10px] font-bold text-indigo-700">{note.subject} · {note.sem}</span>
                   <h3 className="mt-2 text-base font-bold text-slate-900">{note.title}</h3>
-                  <p className="mt-1 text-xs text-slate-500">Uploaded by {note.author} · {note.course}</p>
+                  <p className="mt-1 text-xs text-slate-500 flex items-center gap-1.5 flex-wrap">
+                    <span>Uploaded by {note.author}</span>
+                    {note.isBot && <BotBadge />}
+                    <span>· {note.course}</span>
+                  </p>
                   <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
                     <span>↓ {note.downloads} downloads</span>
                     <Link to="/notes" className="font-bold text-indigo-600 hover:underline">Download →</Link>
@@ -1034,7 +1053,10 @@ export default function CollegeCommunity() {
                           {doubt.author.charAt(0)}
                         </span>
                         <div>
-                          <b className="block text-xs font-bold text-slate-900">{doubt.author}</b>
+                          <b className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                            <span>{doubt.author}</span>
+                            {doubt.isBot && <BotBadge />}
+                          </b>
                           <span className="text-[10px] text-slate-500">{doubt.role} · {doubt.time}</span>
                         </div>
                       </div>
@@ -1110,6 +1132,7 @@ export default function CollegeCommunity() {
                                       {ans.author.charAt(0)}
                                     </span>
                                     <b className="text-xs font-bold text-slate-800">{ans.author}</b>
+                                    {ans.isBot && <BotBadge />}
                                     <span className="text-[10px] text-slate-500">({ans.role})</span>
                                   </div>
                                   {ans.isAccepted && (
@@ -1170,36 +1193,39 @@ export default function CollegeCommunity() {
                 <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                   <Trophy size={20} className="text-amber-500" /> {activeCollege.name} Student Rank List
                 </h3>
-                <p className="text-xs text-slate-500">Based on problem solving, GATE tests, and study material contributions.</p>
+                <p className="text-xs text-slate-500">Pre-loaded starter ranks are labeled BOT — contribute real notes, solve contests, and claim #1 for your campus!</p>
               </div>
             </div>
 
             <div className="flex flex-col divide-y divide-slate-100">
-              {sampleLeaderboard.map((user) => (
-                <div key={user.rank} className="py-3.5 flex items-center justify-between first:pt-0 last:pb-0">
+              {sampleLeaderboard.map((member) => (
+                <div key={member.rank} className="py-3.5 flex items-center justify-between first:pt-0 last:pb-0">
                   <div className="flex items-center gap-3">
                     <span className={`grid h-8 w-8 place-items-center rounded-full text-xs font-extrabold ${
-                      user.rank === 1 ? 'bg-amber-100 text-amber-800 border border-amber-300' :
-                      user.rank === 2 ? 'bg-slate-200 text-slate-800' :
-                      user.rank === 3 ? 'bg-orange-100 text-orange-800' : 'bg-slate-50 text-slate-600'
+                      member.rank === 1 ? 'bg-amber-100 text-amber-800 border border-amber-300' :
+                      member.rank === 2 ? 'bg-slate-200 text-slate-800' :
+                      member.rank === 3 ? 'bg-orange-100 text-orange-800' : 'bg-slate-50 text-slate-600'
                     }`}>
-                      #{user.rank}
+                      #{member.rank}
                     </span>
                     <div>
-                      <b className="block text-sm font-bold text-slate-900">{user.name}</b>
-                      <span className="text-xs text-slate-500">{user.year}</span>
+                      <b className="flex items-center gap-1.5 text-sm font-bold text-slate-900">
+                        <span>{member.name}</span>
+                        {member.isBot && <BotBadge />}
+                      </b>
+                      <span className="text-xs text-slate-500">{member.year}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-4">
                     <div className="hidden sm:flex gap-1.5">
-                      {user.badges.map((b, i) => (
+                      {member.badges.map((b, i) => (
                         <span key={i} className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-700">
                           {b}
                         </span>
                       ))}
                     </div>
-                    <b className="text-sm font-extrabold text-indigo-600">{user.xp} XP</b>
+                    <b className="text-sm font-extrabold text-indigo-600">{member.xp} XP</b>
                   </div>
                 </div>
               ))}

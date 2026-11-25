@@ -164,7 +164,7 @@ exports.get = async (req, res, next) => {
 
     // Fetch Reviews
     const reviews = await Review.find({ noteId: note._id })
-      .populate('userId', 'name profilePhoto collegeName')
+      .populate('userId', 'name profilePhoto collegeName isBot')
       .sort({ createdAt: -1 });
 
     // Fetch Related Notes (same subject or same branch/semester)
@@ -468,14 +468,14 @@ exports.addOrUpdateReview = async (req, res, next) => {
         { noteId: note._id, userId: req.user._id },
         { rating: numRating, review: review.trim() },
         { returnDocument: 'after', upsert: true, setDefaultsOnInsert: true }
-      ).populate('userId', 'name profilePhoto collegeName');
+      ).populate('userId', 'name profilePhoto collegeName isBot');
     } catch (err) {
       if (err.code !== 11000) throw err;
       savedReview = await Review.findOneAndUpdate(
         { noteId: note._id, userId: req.user._id },
         { rating: numRating, review: review.trim() },
         { returnDocument: 'after', setDefaultsOnInsert: true }
-      ).populate('userId', 'name profilePhoto collegeName');
+      ).populate('userId', 'name profilePhoto collegeName isBot');
     }
 
     // Recalculate dynamic average rating for this note
@@ -517,7 +517,7 @@ exports.addOrUpdateReview = async (req, res, next) => {
 exports.getReviews = async (req, res, next) => {
   try {
     const reviews = await Review.find({ noteId: req.params.id })
-      .populate('userId', 'name profilePhoto collegeName')
+      .populate('userId', 'name profilePhoto collegeName isBot')
       .sort({ createdAt: -1 });
 
     res.json(reviews);
