@@ -25,7 +25,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
-import { gameService } from '../services/api';
+import { gameService, getAuthToken } from '../services/api';
 import GameRoomCard from '../components/games/GameRoomCard';
 import FamousGameCard from '../components/games/FamousGameCard';
 import HostRoomModal from '../components/games/HostRoomModal';
@@ -134,7 +134,7 @@ export default function Games() {
     const socketUrl =
       import.meta.env.VITE_API_URL?.replace('/api', '') ||
       (['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://localhost:5001' : '/');
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
 
     try {
       socketRef.current = io(socketUrl, {

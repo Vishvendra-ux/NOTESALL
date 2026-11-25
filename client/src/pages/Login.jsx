@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Sparkles, Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff, Loader2, GraduationCap, ShieldCheck, UserCheck } from 'lucide-react';
+import { Sparkles, Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff, Loader2, GraduationCap, ShieldCheck, UserCheck, Compass } from 'lucide-react';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
 
@@ -17,7 +17,7 @@ export default function Login() {
   const [customGoogleName, setCustomGoogleName] = useState('');
   const [customGoogleEmail, setCustomGoogleEmail] = useState('');
 
-  const { user, login, loginWithGoogle } = useContext(AuthContext);
+  const { user, login, loginWithGoogle, loginAsDemo } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const rawRedirect = location.state?.from?.pathname || '/';
@@ -73,18 +73,10 @@ export default function Login() {
     setActiveDemo('student');
 
     try {
-      const res = await login('student.demo@notesx.edu', 'student123');
+      const res = await loginAsDemo();
       navigateAfterAuth(res);
     } catch (err) {
-      try {
-        const res = await loginWithGoogle({
-          name: 'Demo Student',
-          email: 'student.demo@notesx.edu',
-        });
-        navigateAfterAuth(res);
-      } catch (gErr) {
-        setError(getErrorMessage(err));
-      }
+      setError(getErrorMessage(err));
     } finally {
       setIsSubmitting(false);
       setActiveDemo(null);
@@ -175,6 +167,31 @@ export default function Login() {
               Google Sign-In is unavailable until <code className="font-mono font-semibold">VITE_GOOGLE_CLIENT_ID</code> is configured.
             </div>
           )}
+
+          {/* One-Time Guest Demo Pass (Live in Production & Dev) */}
+          <div className="pt-1">
+            <button
+              type="button"
+              onClick={handleInstantStudentLogin}
+              disabled={isSubmitting}
+              className="w-full h-11 flex items-center justify-center gap-2 rounded-xl border border-amber-300/90 dark:border-amber-700/70 bg-gradient-to-r from-amber-50 via-orange-50/80 to-emerald-50/70 dark:from-amber-950/50 dark:via-orange-950/40 dark:to-emerald-950/40 hover:from-amber-100 hover:to-emerald-100/80 dark:hover:from-amber-900/50 text-amber-900 dark:text-amber-200 text-sm font-bold transition shadow-xs cursor-pointer disabled:opacity-60"
+            >
+              {activeDemo === 'student' ? (
+                <>
+                  <Loader2 size={16} className="animate-spin text-amber-700 dark:text-amber-300" />
+                  <span>Starting One-Time Demo...</span>
+                </>
+              ) : (
+                <>
+                  <Compass size={16} className="text-amber-700 dark:text-amber-300" />
+                  <span>Explore with One-Time Demo Account</span>
+                </>
+              )}
+            </button>
+            <p className="mt-1.5 text-center text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              Instant guest pass to surf the whole site · No sign-up needed · Ends when tab closes
+            </p>
+          </div>
 
           {/* Test Any Google Account Option in Dev Mode (requires ENABLE_DEMO_USER=true on server) */}
           {import.meta.env.DEV && (

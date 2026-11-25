@@ -1,10 +1,15 @@
+const crypto = require('crypto');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-const generateToken = (id) => {
+const DEMO_ACCOUNT_EMAIL = 'demo@notesx.edu';
+const DEMO_SESSION_TTL = '2h';
+const DEMO_SESSION_TTL_SECONDS = 2 * 60 * 60;
+
+const generateToken = (id, expiresIn = '30d') => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
+    expiresIn,
   });
 };
 
@@ -30,6 +35,7 @@ const formatUserResponse = (user, token) => {
     isPro: Boolean(user.isPro) && (!user.proExpiresAt || new Date(user.proExpiresAt) > new Date()),
     proExpiresAt: user.proExpiresAt || null,
     isOnboarded: user.role === 'admin' ? true : Boolean(user.isOnboarded),
+    isDemo: Boolean(user.isDemo),
     careerGoal: user.careerGoal || '',
     skills: user.skills || [],
     codingProfiles: user.codingProfiles,
@@ -232,6 +238,63 @@ const googleLogin = async (req, res) => {
   }
 };
 
+// @desc    Issue a temporary one-time guest demo session so visitors can explore the full site
+// @route   POST /api/auth/demo
+// @access  Public (rate-limited)
+const demoLogin = async (req, res) => {
+  try {
+    if (process.env.DISABLE_DEMO_ACCOUNT === 'true') {
+      return res.status(403).json({
+        message: 'Guest demo access is currently disabled. Please sign in with Google or create an account.'
+      });
+    }
+
+    let user = await User.findOne({ email: DEMO_ACCOUNT_EMAIL });
+
+    if (!user) {
+      const randomPassword = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 10);
+      user = await User.create({
+        name: 'Demo Explorer',
+        email: DEMO_ACCOUNT_EMAIL,
+        password: randomPassword,
+        role: 'student',
+        bio: 'Exploring NOTESX with a temporary one-time guest pass.',
+        collegeName: 'GLA University',
+        course: 'B.Tech CSE',
+        year: '3rd Year',
+        semester: 'Semester 5',
+        careerGoal: 'Full-Stack Software Engineer',
+        skills: ['DSA', 'React', 'Node.js', 'MongoDB', 'Operating Systems'],
+        reputation: 240,
+        badges: ['👀 Guest Explorer', '🎓 Onboarded Student'],
+        isVerified: true,
+        isPro: false,
+        isOnboarded: true,
+        isDemo: true,
+      });
+      console.log(`✅ One-time Guest Demo Account initialized: ${user.email}`);
+    } else {
+      // Self-heal invariants: demo account is always a non-Pro, onboarded student
+      let dirty = false;
+      if (!user.isDemo) { user.isDemo = true; dirty = true; }
+      if (!user.isOnboarded) { user.isOnboarded = true; dirty = true; }
+      if (!user.isVerified) { user.isVerified = true; dirty = true; }
+      if (user.role !== 'student') { user.role = 'student'; dirty = true; }
+      if (user.isPro) { user.isPro = false; user.proExpiresAt = null; dirty = true; }
+      if (dirty) await user.save();
+    }
+
+    const token = generateToken(user._id, DEMO_SESSION_TTL);
+    res.json({
+      ...formatUserResponse(user, token),
+      demoExpiresInSeconds: DEMO_SESSION_TTL_SECONDS,
+    });
+  } catch (error) {
+    console.error('Demo login error:', error);
+    res.status(500).json({ message: 'Unable to start demo session right now. Please try again.' });
+  }
+};
+
 // @desc    Complete Student Onboarding (academic profile, coding handles, career goal, skills)
 // @route   PUT /api/auth/onboarding
 // @access  Private (Student)
@@ -240,6 +303,11 @@ const completeStudentOnboarding = async (req, res) => {
     const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
+    }
+    if (user.isDemo) {
+      return res.status(403).json({
+        message: 'Demo account is already pre-configured. Sign in with Google to create your own profile.'
+      });
     }
 
     const {
@@ -384,4 +452,4 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = { register, login, googleLogin, completeStudentOnboarding, getMe, googleClient };
+module.exports = { register, login, googleLogin, demoLogin, completeStudentOnboarding, getMe, googleClient };

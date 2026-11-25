@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Bell, Menu, X, ChevronDown, Sparkles, LogOut, ShieldCheck, User, BookOpen, Check, Users2, Gamepad2, MessageCircle, Trophy, Database } from 'lucide-react';
+import { Search, Bell, Menu, X, ChevronDown, Sparkles, LogOut, ShieldCheck, User, BookOpen, Check, Users2, Gamepad2, MessageCircle, Trophy, Database, Compass, Loader2 } from 'lucide-react';
 import { useState, useContext, useEffect, useRef, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { notesService } from '../services/api';
@@ -39,7 +39,24 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, loginAsDemo } = useContext(AuthContext);
+  const [startingDemo, setStartingDemo] = useState(false);
+
+  const handleStartDemo = async () => {
+    if (startingDemo) return;
+    setStartingDemo(true);
+    try {
+      await loginAsDemo();
+      setIsOpen(false);
+      if (location.pathname === '/login' || location.pathname === '/register') {
+        navigate('/notes');
+      }
+    } catch {
+      navigate('/login');
+    } finally {
+      setStartingDemo(false);
+    }
+  };
   const userKey = user ? String(user._id || user.id || user.email || 'account') : '';
   const readStorageKey = userKey ? `notesx:notifications:seen:${userKey}` : '';
   const unreadCount = notifications.filter((note) => !readNotificationIds.has(getNotificationId(note))).length;
@@ -437,7 +454,7 @@ export default function Navbar() {
                       </div>
                       <div className="hidden xl:block text-left leading-tight">
                         <b className="block text-xs font-bold text-slate-900 truncate max-w-[110px]">{user.name || 'Student'}</b>
-                        <span className="text-[10px] text-indigo-600 font-bold capitalize">{user.role || 'Student'}</span>
+                        <span className="text-[10px] text-indigo-600 font-bold capitalize">{user.isDemo ? 'Demo Pass' : (user.role || 'Student')}</span>
                       </div>
                       <ChevronDown size={14} className="hidden xl:block text-slate-400" />
                     </button>
@@ -450,6 +467,11 @@ export default function Navbar() {
                           {user.role === 'admin' && (
                             <span className="mt-1 inline-flex items-center gap-1 rounded-md bg-indigo-50 border border-indigo-100 px-2 py-0.5 text-[9px] font-extrabold text-indigo-700">
                               <ShieldCheck size={11} /> Admin Verified
+                            </span>
+                          )}
+                          {user.isDemo && (
+                            <span className="mt-1 inline-flex items-center gap-1 rounded-md bg-amber-50 border border-amber-200 px-2 py-0.5 text-[9px] font-extrabold text-amber-800">
+                              <Compass size={11} /> One-Time Guest Pass
                             </span>
                           )}
                         </div>
@@ -488,7 +510,17 @@ export default function Navbar() {
                 </>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Link to="/login" className="px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition">
+                  <button
+                    type="button"
+                    onClick={handleStartDemo}
+                    disabled={startingDemo}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border border-amber-300 bg-amber-50/90 text-amber-900 hover:bg-amber-100 transition cursor-pointer disabled:opacity-60"
+                    title="Explore the entire site instantly with a temporary guest account"
+                  >
+                    {startingDemo ? <Loader2 size={13} className="animate-spin" /> : <Compass size={13} />}
+                    <span>{startingDemo ? 'Opening…' : 'Live Demo'}</span>
+                  </button>
+                  <Link to="/login" className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 transition">
                     Sign In
                   </Link>
                   <Link to="/register" className="btn-primary py-2 px-4 text-xs font-bold">
@@ -559,6 +591,15 @@ export default function Navbar() {
                 </button>
               ) : (
                 <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={handleStartDemo}
+                    disabled={startingDemo}
+                    className="flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 transition disabled:opacity-60"
+                  >
+                    {startingDemo ? <Loader2 size={14} className="animate-spin" /> : <Compass size={14} />}
+                    <span>{startingDemo ? 'Starting One-Time Demo…' : 'Try One-Time Demo Account'}</span>
+                  </button>
                   <Link to="/login" onClick={() => setIsOpen(false)} className="block w-full text-center px-4 py-2 rounded-xl text-xs font-bold text-slate-700 border border-slate-200">
                     Sign In
                   </Link>

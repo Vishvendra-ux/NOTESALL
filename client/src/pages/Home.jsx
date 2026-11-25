@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import {
   ArrowRight,
@@ -10,6 +10,7 @@ import {
   Gamepad2,
   GraduationCap,
   Lightbulb,
+  Loader2,
   MessageCircle,
   Rocket,
   Sparkles,
@@ -25,7 +26,8 @@ import {
   Code2,
   X,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const quickSurfPills = [
   { name: 'Course Notes', to: '/notes', icon: BookOpen, badge: 'Units 1-5' },
@@ -369,10 +371,26 @@ const testimonials = [
 ];
 
 export default function Home() {
+  const { user, loginAsDemo } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [startingDemo, setStartingDemo] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
   const [queryIndex, setQueryIndex] = useState(0);
   const [activityIndex, setActivityIndex] = useState(0);
   const [showActivity, setShowActivity] = useState(true);
+
+  const handleHeroDemo = async () => {
+    if (startingDemo) return;
+    setStartingDemo(true);
+    try {
+      await loginAsDemo();
+      navigate('/notes');
+    } catch {
+      navigate('/login');
+    } finally {
+      setStartingDemo(false);
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -480,12 +498,34 @@ export default function Home() {
 
             {/* Stagger 5: Dual CTA Buttons */}
             <div className="hero-in-5 mt-8 flex flex-wrap items-center gap-3.5">
-              <Link
-                to="/notes"
-                className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#c2410c] via-[#ea580c] to-[#d97706] px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_8px_25px_rgba(194,65,12,0.45)] transition-all hover:shadow-[0_12px_32px_rgba(234,88,12,0.6)] hover:scale-105 active:scale-95"
-              >
-                Find Your Semester Notes <ArrowRight size={16} />
-              </Link>
+              {!user ? (
+                <button
+                  type="button"
+                  onClick={handleHeroDemo}
+                  disabled={startingDemo}
+                  className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#c2410c] via-[#ea580c] to-[#d97706] px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_8px_25px_rgba(194,65,12,0.45)] transition-all hover:shadow-[0_12px_32px_rgba(234,88,12,0.6)] hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-70"
+                >
+                  {startingDemo ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      <span>Starting One-Time Demo...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Compass size={16} />
+                      <span>Try 1-Click Demo Pass</span>
+                      <ArrowRight size={16} />
+                    </>
+                  )}
+                </button>
+              ) : (
+                <Link
+                  to="/notes"
+                  className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#c2410c] via-[#ea580c] to-[#d97706] px-7 py-3.5 text-sm font-extrabold text-white shadow-[0_8px_25px_rgba(194,65,12,0.45)] transition-all hover:shadow-[0_12px_32px_rgba(234,88,12,0.6)] hover:scale-105 active:scale-95"
+                >
+                  Find Your Semester Notes <ArrowRight size={16} />
+                </Link>
+              )}
               <Link
                 to="/contests"
                 className="sheen-btn inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10 backdrop-blur"

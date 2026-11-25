@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bot, X, Send, Sparkles, FileText, ArrowRight, Loader2, RotateCcw, Compass, ExternalLink, MapPin, Zap } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { aiService } from '../services/api';
+import { aiService, getAuthToken } from '../services/api';
 
 const STARTER_PROMPTS = [
   'Explain Process Synchronization in OS',
@@ -26,7 +26,7 @@ export default function AIAssistant() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isOpen && localStorage.getItem('token')) {
+    if (isOpen && getAuthToken()) {
       aiService.getQuota()
         .then(res => setQuota(res.data))
         .catch(() => {});

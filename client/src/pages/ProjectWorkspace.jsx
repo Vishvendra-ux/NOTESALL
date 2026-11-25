@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { buildTogetherService } from '../services/api';
+import { buildTogetherService, getAuthToken } from '../services/api';
 import { io } from 'socket.io-client';
 import { ArrowLeft, Send, Users, ShieldCheck, Ticket } from 'lucide-react';
 
@@ -55,7 +55,7 @@ export default function ProjectWorkspace() {
         // Initialize Socket.io — same-origin in production, localhost in dev
         const socketUrl = import.meta.env.VITE_API_URL?.replace('/api', '')
           || (['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://localhost:5001' : '/');
-        const token = localStorage.getItem('token');
+        const token = getAuthToken();
         const socket = io(socketUrl, {
           auth: { token }
         });

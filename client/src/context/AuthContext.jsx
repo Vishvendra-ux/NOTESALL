@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { api } from '../services/api';
+import { api, getAuthToken, setAuthToken, clearAuthToken } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -9,14 +9,14 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem('token');
+      const token = getAuthToken();
       if (token) {
         try {
-          const res = await api.get('/auth/me');
+          const res = await api.get('/auth/me', { timeout: 60000 });
           setUser(res.data);
         } catch (error) {
           console.error('Failed to fetch user', error);
-          localStorage.removeItem('token');
+          clearAuthToken();
         }
       }
       setLoading(false);
@@ -25,22 +25,29 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const res = await api.post('/auth/login', { email: email.trim().toLowerCase(), password });
-    localStorage.setItem('token', res.data.token);
+    const res = await api.post('/auth/login', { email: email.trim().toLowerCase(), password }, { timeout: 60000 });
+    setAuthToken(res.data.token);
     setUser(res.data);
     return res.data;
   };
 
   const register = async (userData) => {
-    const res = await api.post('/auth/register', userData);
-    localStorage.setItem('token', res.data.token);
+    const res = await api.post('/auth/register', userData, { timeout: 60000 });
+    setAuthToken(res.data.token);
     setUser(res.data);
     return res.data;
   };
 
   const loginWithGoogle = async (googleData) => {
-    const res = await api.post('/auth/google', googleData);
-    localStorage.setItem('token', res.data.token);
+    const res = await api.post('/auth/google', googleData, { timeout: 60000 });
+    setAuthToken(res.data.token);
+    setUser(res.data);
+    return res.data;
+  };
+
+  const loginAsDemo = async () => {
+    const res = await api.post('/auth/demo', {}, { timeout: 60000 });
+    setAuthToken(res.data.token, { ephemeral: true });
     setUser(res.data);
     return res.data;
   };
@@ -52,12 +59,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    clearAuthToken();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, login, register, loginWithGoogle, completeOnboarding, logout }}>
+    <AuthContext.Provider value={{ user, setUser, loading, login, register, loginWithGoogle, loginAsDemo, completeOnboarding, logout }}>
       {children}
     </AuthContext.Provider>
   );

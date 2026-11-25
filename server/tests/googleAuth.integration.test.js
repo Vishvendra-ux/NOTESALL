@@ -176,3 +176,68 @@ test('POST /api/auth/google verifies credential with GOOGLE_CLIENT_ID audience a
   assert.equal(secondLogin.status, 200);
   assert.equal(secondLogin.data._id, firstLogin.data._id);
 });
+
+test('POST /api/auth/demo issues a 2h guest student session and protects demo account mutations', async () => {
+  const jwt = require('jsonwebtoken');
+
+  const demoRes = await postJson('/api/auth/demo', {});
+  assert.equal(demoRes.status, 200);
+  assert.equal(demoRes.data.email, 'demo@notesx.edu');
+  assert.equal(demoRes.data.role, 'student');
+  assert.equal(demoRes.data.isDemo, true);
+  assert.equal(demoRes.data.isOnboarded, true);
+  assert.equal(demoRes.data.isPro, false);
+  assert.equal(demoRes.data.demoExpiresInSeconds, 7200);
+  assert.ok(demoRes.data.token);
+
+  const decoded = jwt.verify(demoRes.data.token, JWT_SECRET);
+  assert.equal(decoded.exp - decoded.iat, 7200);
+
+  // Demo token can access protected routes like /api/auth/me
+  const meRes = await fetch(`${baseUrl}/api/auth/me`, {
+    headers: { Authorization: `Bearer ${demoRes.data.token}` },
+  });
+  assert.equal(meRes.status, 200);
+  const meData = await meRes.json();
+  assert.equal(meData.isDemo, true);
+
+  // Demo account cannot mutate shared profile, re-run onboarding, or self-upgrade Pro
+  const profileEditRes = await fetch(`${baseUrl}/api/users/profile`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${demoRes.data.token}`,
+    },
+    body: JSON.stringify({ name: 'Hacked Name' }),
+  });
+  assert.equal(profileEditRes.status, 403);
+
+  const onboardRes = await fetch(`${baseUrl}/api/auth/onboarding`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${demoRes.data.token}`,
+    },
+    body: JSON.stringify({ collegeName: 'Other', course: 'CS', year: '1st' }),
+  });
+  assert.equal(onboardRes.status, 403);
+
+  const proRes = await fetch(`${baseUrl}/api/users/upgrade-pro`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${demoRes.data.token}`,
+    },
+    body: JSON.stringify({ isPro: true }),
+  });
+  assert.equal(proRes.status, 403);
+
+  // Kill-switch DISABLE_DEMO_ACCOUNT=true disables demo login
+  process.env.DISABLE_DEMO_ACCOUNT = 'true';
+  try {
+    const disabledRes = await postJson('/api/auth/demo', {});
+    assert.equal(disabledRes.status, 403);
+  } finally {
+    delete process.env.DISABLE_DEMO_ACCOUNT;
+  }
+});

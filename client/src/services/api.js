@@ -7,10 +7,41 @@ const baseURL = rawApiUrl
       : `${rawApiUrl.replace(/\/+$/, '')}/api`)
   : '/api';
 
+export const getAuthToken = () => {
+  try {
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
+  } catch {
+    return null;
+  }
+};
+
+export const setAuthToken = (token, { ephemeral = false } = {}) => {
+  try {
+    if (ephemeral) {
+      localStorage.removeItem('token');
+      sessionStorage.setItem('token', token);
+    } else {
+      sessionStorage.removeItem('token');
+      localStorage.setItem('token', token);
+    }
+  } catch {
+    // Ignore storage quota / private-mode restrictions
+  }
+};
+
+export const clearAuthToken = () => {
+  try {
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+  } catch {
+    // Ignore storage errors
+  }
+};
+
 export const api = axios.create({ baseURL, timeout: 10000 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = getAuthToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -22,7 +53,7 @@ api.interceptors.response.use(
   (err) => {
     const url = String(err.config?.url || '');
     if (err.response?.status === 401 && !url.startsWith('/auth/')) {
-      localStorage.removeItem('token');
+      clearAuthToken();
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }
@@ -33,9 +64,10 @@ api.interceptors.response.use(
 
 export const collegeService = { list: (params) => api.get('/colleges', { params }), get: (id) => api.get(`/colleges/${id}`) };
 export const authService = { 
-  login: (data) => api.post('/auth/login', data), 
-  register: (data) => api.post('/auth/register', data), 
-  googleLogin: (data) => api.post('/auth/google', data),
+  login: (data) => api.post('/auth/login', data, { timeout: 60000 }), 
+  register: (data) => api.post('/auth/register', data, { timeout: 60000 }), 
+  googleLogin: (data) => api.post('/auth/google', data, { timeout: 60000 }),
+  demoLogin: () => api.post('/auth/demo', {}, { timeout: 60000 }),
   onboarding: (data) => api.put('/auth/onboarding', data),
   me: () => api.get('/auth/me') 
 };

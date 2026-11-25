@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Sparkles, Send, BookOpen, ListChecks, Lightbulb, Route, BarChart3, Plus, FileText, ArrowRight, Loader2, Compass, ChevronRight, MapPin, Zap } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { aiService } from '../services/api';
+import { aiService, getAuthToken } from '../services/api';
 
 const actions = [
   [BookOpen, 'Explain Process Synchronization', 'Break Peterson’s algorithm and semaphores into steps'],
@@ -29,7 +29,7 @@ export default function AIAssistantPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if (getAuthToken()) {
       aiService.getQuota()
         .then(res => setQuota(res.data))
         .catch(() => {});

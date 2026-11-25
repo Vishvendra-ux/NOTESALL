@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Sparkles, User, Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Sparkles, User, Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff, Loader2, Compass } from 'lucide-react';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
 
@@ -14,7 +14,7 @@ export default function Register() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { user, register, loginWithGoogle } = useContext(AuthContext);
+  const { user, register, loginWithGoogle, loginAsDemo } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const navigateAfterAuth = (userObj) => {
@@ -76,6 +76,19 @@ export default function Register() {
     }
   };
 
+  const handleOneTimeDemo = async () => {
+    setError('');
+    setIsSubmitting(true);
+    try {
+      const res = await loginAsDemo();
+      navigateAfterAuth(res);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="relative min-h-[calc(100vh-14rem)] flex items-center justify-center py-6 px-4 sm:px-6 overflow-hidden">
       {/* Background Decorative Ambient Glows */}
@@ -103,7 +116,7 @@ export default function Register() {
 
         {/* Google One-Click Sign Up */}
         {googleClientId && (
-          <div className={`mb-5 flex justify-center ${isSubmitting ? 'pointer-events-none opacity-60' : ''}`}>
+          <div className={`mb-3 flex justify-center ${isSubmitting ? 'pointer-events-none opacity-60' : ''}`}>
             <GoogleLogin
               onSuccess={handleGoogleSignUp}
               onError={() => setError('Google Sign-Up failed or was cancelled. Please try again.')}
@@ -115,6 +128,17 @@ export default function Register() {
             />
           </div>
         )}
+
+        {/* Instant One-Time Guest Demo Pass */}
+        <button
+          type="button"
+          onClick={handleOneTimeDemo}
+          disabled={isSubmitting}
+          className="w-full h-10 mb-5 flex items-center justify-center gap-2 rounded-xl border border-amber-300/90 dark:border-amber-700/70 bg-amber-50/90 dark:bg-amber-950/40 hover:bg-amber-100/90 dark:hover:bg-amber-900/50 text-amber-900 dark:text-amber-200 text-xs sm:text-sm font-bold transition cursor-pointer disabled:opacity-60"
+        >
+          <Compass size={15} className="text-amber-700 dark:text-amber-300" />
+          <span>Just browsing? Try One-Time Demo Account</span>
+        </button>
 
         {/* Divider */}
         <div className="relative flex items-center justify-center mb-5">

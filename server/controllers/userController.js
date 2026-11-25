@@ -41,6 +41,11 @@ exports.updateProfile = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    if (user.isDemo) {
+      return res.status(403).json({
+        message: 'Demo account profile is read-only. Sign in with Google or register to customize your own profile.'
+      });
+    }
 
     if (name) user.name = name;
     if (bio !== undefined) user.bio = bio;
@@ -76,6 +81,11 @@ exports.uploadResume = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    if (user.isDemo) {
+      return res.status(403).json({
+        message: 'Demo account profile is read-only. Sign in with Google or register to customize your own profile.'
+      });
+    }
 
     user.resume = fileUrl;
     user.resumeOriginalName = req.file.originalname;
@@ -94,6 +104,11 @@ exports.deleteResume = async (req, res, next) => {
     const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
+    }
+    if (user.isDemo) {
+      return res.status(403).json({
+        message: 'Demo account profile is read-only. Sign in with Google or register to customize your own profile.'
+      });
     }
 
     user.resume = '';
